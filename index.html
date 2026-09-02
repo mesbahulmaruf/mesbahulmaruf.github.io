@@ -1,0 +1,3202 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Md Mesbahul Maruf — Robotics, Control & Autonomous Systems</title>
+<meta name="description" content="Robotics, learning-based control, state estimation and multi-agent systems research by Md Mesbahul Maruf, Ph.D. student in Electrical & Computer Engineering at Auburn University.">
+<meta property="og:title" content="Md Mesbahul Maruf — Robotics, Control & Autonomous Systems">
+<meta property="og:description" content="Robotics, learning-based control, state estimation, multi-agent systems, and ground robotics research.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════ TOKENS ═══════════ */
+:root{
+  --paper:#EDEFEA; --surface:#F7F8F4; --ink:#16180F;
+  --muted:#5E6356; --rule:#C4C8BC; --hair:#DADDD3; --grid:#E1E4DA;
+  --accent:#C7301A; --blue:#2F4E7E; --green:#3F7A4A; --gold:#B0821E;
+  --f-disp:"Barlow Condensed",Impact,sans-serif;
+  --f-body:"Barlow",system-ui,sans-serif;
+  --f-mono:"Space Mono",ui-monospace,monospace;
+  --maxw:1120px; --ease:cubic-bezier(.2,.7,.3,1);
+}
+[data-theme="dark"]{
+  --paper:#0E1013; --surface:#171A1F; --ink:#E9EBE6;
+  --muted:#868C84; --rule:#2A2E35; --hair:#1E2228; --grid:#191D23;
+  --accent:#FF4A2B; --blue:#7FA9E6; --green:#5CC073; --gold:#E0AE44;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--f-body);
+  font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  transition:background .4s var(--ease), color .4s var(--ease)}
+a{color:inherit} img{display:block; max-width:100%}
+::selection{background:var(--accent); color:#fff}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 30px}
+#prog{position:fixed; top:0; left:0; height:3px; background:var(--accent); width:0; z-index:99; transition:width .12s linear}
+
+/* ═══════════ HEADER ═══════════ */
+.plate{position:sticky; top:0; z-index:60; background:var(--paper); border-bottom:2px solid var(--ink)}
+.plate .wrap{display:flex; align-items:center; gap:20px; height:60px}
+.tag{font-family:var(--f-mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  text-decoration:none; background:var(--ink); color:var(--paper); padding:6px 10px; white-space:nowrap; transition:.25s var(--ease)}
+.tag:hover{background:var(--accent); color:#fff; letter-spacing:.17em}
+.plate nav{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  position:relative
+}
+.plate nav a{
+  font-family:var(--f-disp);
+  font-weight:600;
+  font-size:15.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-decoration:none;
+  color:var(--muted);
+  padding:8px 14px;
+  transition:color .25s var(--ease);
+  position:relative;
+  z-index:2;
+  flex:0 0 auto;
+  white-space:nowrap
+}
+.plate nav a:hover,.plate nav a.on{color:var(--ink)}
+.nav-ink{position:absolute; bottom:-2px; left:0; height:3px; width:0; background:var(--accent);
+  transition:transform .42s var(--ease), width .42s var(--ease); z-index:1; pointer-events:none}
+.theme-btn{margin-left:14px; background:none; border:1.5px solid var(--rule); color:var(--muted);
+  width:31px; height:31px; cursor:pointer; display:grid; place-items:center; padding:0; transition:.3s var(--ease)}
+.theme-btn:hover{color:var(--ink); border-color:var(--accent); transform:rotate(90deg)}
+.theme-btn svg{width:14px; height:14px}
+.burger{display:none; margin-left:auto; background:none; border:1.5px solid var(--rule); width:34px; height:31px;
+  cursor:pointer; color:var(--ink); font-family:var(--f-mono); font-size:11px}
+
+/* ═══════════ PAGE TRANSITION + HEADS ═══════════ */
+#view{transition:opacity .24s var(--ease), transform .24s var(--ease)}
+#view.leaving{opacity:0; transform:translateY(-14px)}
+
+
+.pagehead{padding:58px 30px 0; position:relative}
+.pagehead::before{content:""; position:absolute; left:18px; top:0; width:6px; height:0; background:var(--accent); animation:growRule .8s .05s var(--ease) forwards}
+@keyframes growRule{to{height:calc(100% - 12px)}}
+.pagehead .kicker{font-family:var(--f-mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent); margin:0 0 12px; opacity:0; animation:fadeUp .55s .1s var(--ease) forwards}
+.pagehead h1{font-family:var(--f-disp); font-weight:700; text-transform:uppercase; letter-spacing:-.01em;
+  font-size:clamp(2.4rem,7vw,4.6rem); line-height:.94; margin:0 0 18px; max-width:18ch}
+.pagehead h1 span{display:block; overflow:hidden}
+.pagehead h1 span i{display:block; font-style:normal; transform:translateY(105%); animation:riseIn .8s var(--ease) forwards}
+.pagehead h1 span:nth-child(1) i{animation-delay:.08s}
+.pagehead h1 span:nth-child(2) i{animation-delay:.18s}
+.pagehead .sub{max-width:62ch; color:var(--muted); font-size:1.04rem; margin:0 0 6px; opacity:0; animation:fadeUp .6s .3s var(--ease) forwards}
+.pagehead .sub strong{color:var(--ink); font-weight:600}
+@keyframes riseIn{to{transform:none}}
+@keyframes fadeUp{from{opacity:0; transform:translateY(12px)}to{opacity:1; transform:none}}
+
+.hero h1{font-size:clamp(2.9rem,10.5vw,6.6rem); max-width:14ch}
+.hero h1 span:nth-child(1) i{font-weight:500; color:var(--muted)}
+.role{display:grid; grid-template-columns:minmax(300px,1.35fr) minmax(160px,.65fr) minmax(330px,1.5fr); margin:26px 0 0; border-top:1px solid var(--ink); border-bottom:1px solid var(--ink);
+  opacity:0; animation:fadeUp .6s .4s var(--ease) forwards}
+.role div{padding:11px 18px; margin:0; border-right:1px solid var(--rule);
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.05em; color:var(--muted)}
+.role div:first-child{padding-left:0}
+.role div:last-child{border-right:0}
+.role b{display:block; font-weight:400; color:var(--ink); text-transform:uppercase; font-size:10px; letter-spacing:.12em; margin-bottom:2px}
+.meta-row{display:flex; flex-wrap:wrap; margin-top:28px; opacity:0; animation:fadeUp .6s .5s var(--ease) forwards}
+.meta-row a{font-family:var(--f-mono); font-size:11.5px; letter-spacing:.04em; text-decoration:none; color:var(--ink);
+  border:1.5px solid var(--ink); padding:9px 16px; margin:0 -1.5px -1.5px 0; transition:.2s var(--ease); position:relative; overflow:hidden; z-index:0; overflow-wrap:anywhere}
+.meta-row a::before{content:""; position:absolute; inset:0; background:var(--accent); transform:translateY(101%); transition:transform .28s var(--ease); z-index:-1}
+.meta-row a:hover{color:#fff; border-color:var(--accent); z-index:2}
+.meta-row a:hover::before{transform:none}
+
+/* ═══════════ TICKER ═══════════ */
+.ticker{overflow:hidden; border-top:1.5px solid var(--ink); border-bottom:1.5px solid var(--ink); margin-top:60px; background:var(--surface); padding:10px 0}
+.ticker-track{display:flex; width:max-content; animation:slide 44s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes slide{to{transform:translateX(-50%)}}
+.ticker span{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); padding:0 20px; white-space:nowrap}
+.ticker span::after{content:"◆"; color:var(--accent); margin-left:20px; font-size:8px; vertical-align:middle}
+
+/* ═══════════ SECTIONS ═══════════ */
+section{padding:64px 0 70px; border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:none}
+.dim{display:flex; align-items:center; margin-bottom:18px}
+.dim .cap{width:1.5px; height:15px; background:var(--ink); flex:none; opacity:0; transition:opacity .3s .5s}
+.dim.in .cap{opacity:1}
+.dim .ln{height:1.5px; background:var(--ink); flex:1; transform:scaleX(0); transform-origin:left; transition:transform .95s var(--ease)}
+.dim .ln:last-of-type{transform-origin:right}
+.dim.in .ln{transform:scaleX(1)}
+.dim .ln.short{flex:0 0 26px}
+.dim h2{font-family:var(--f-disp); font-weight:700; font-size:21px; letter-spacing:.14em; text-transform:uppercase;
+  margin:0; padding:0 15px; white-space:nowrap; opacity:0; transform:translateY(8px); transition:.5s .2s var(--ease)}
+.dim.in h2{opacity:1; transform:none}
+.dim .qty{font-family:var(--f-mono); font-size:11px; color:var(--muted); padding:0 14px; white-space:nowrap; opacity:0; transition:opacity .4s .5s}
+.dim.in .qty{opacity:1}
+.note{font-size:.93rem; color:var(--muted); max-width:64ch; margin:0 0 32px}
+
+/* ═══════════ ABOUT: PORTRAIT + BIO ═══════════ */
+.bio{display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:0 48px; align-items:start}
+.portrait{position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--surface); border:1px solid var(--rule)}
+.portrait::before,.portrait::after{content:""; position:absolute; width:22px; height:22px; z-index:4; pointer-events:none}
+.portrait::before{top:-1px; left:-1px; border-top:3px solid var(--accent); border-left:3px solid var(--accent)}
+.portrait::after{bottom:-1px; right:-1px; border-bottom:3px solid var(--accent); border-right:3px solid var(--accent)}
+.portrait img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  filter:none; transition:filter .6s var(--ease), transform .8s var(--ease)}
+.portrait:hover img{transform:scale(1.03)}
+.portrait .ph{display:none; position:absolute; inset:0; place-items:center; text-align:center;
+  font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); line-height:2.2; padding:20px}
+.portrait.empty{border-style:dashed}
+.portrait.empty::before,.portrait.empty::after{border-color:var(--rule)}
+.portrait.empty .ph{display:grid}
+.portrait-cap{
+  font-family:var(--f-mono);
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:12px 0 0;
+  display:flex;
+  justify-content:space-between;
+  gap:10px
+}
+.bio-text{
+  max-width:760px;
+  border-top:3px solid var(--ink);
+  padding-top:18px
+}
+.bio-text::before{
+  content:"Profile";
+  display:block;
+  margin-bottom:13px;
+  font-family:var(--f-mono);
+  font-size:8.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent)
+}
+.bio-text p{
+  font-family:var(--f-body);
+  font-size:1rem;
+  line-height:1.72;
+  color:var(--muted);
+  margin:0;
+  padding:15px 0;
+  border-bottom:1px solid var(--hair)
+}
+.bio-text p:first-child{
+  padding-top:0;
+  font-size:1.18rem;
+  line-height:1.58;
+  color:var(--ink)
+}
+.bio-text p strong{
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-weight:600
+}
+.pullquote{border-left:5px solid var(--accent); background:var(--surface); padding:20px 24px; margin:30px 0 0}
+.pullquote span{display:block; font-family:var(--f-mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:9px}
+.pullquote p{margin:0; font-size:1.04rem; font-style:italic; color:var(--ink)}
+
+/* ═══════════ FOCUS / HOBBY CARDS ═══════════ */
+.focus{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.foc{border:1.5px solid var(--rule); padding:24px 22px 26px; margin:0 -1.5px -1.5px 0;
+  transition:.3s var(--ease); position:relative; overflow:hidden; color:var(--muted)}
+.foc::after{content:""; position:absolute; left:0; bottom:0; height:3px; width:100%; background:var(--accent);
+  transform:scaleX(0); transform-origin:left; transition:transform .4s var(--ease)}
+.foc:hover{border-color:var(--accent); z-index:2; transform:translateY(-4px)}
+.foc:hover::after{transform:scaleX(1)}
+.foc svg{width:100%; height:66px; margin-bottom:18px; overflow:visible}
+.foc h3{font-family:var(--f-disp); font-weight:600; font-size:1.3rem; text-transform:uppercase; line-height:1.06; margin:0 0 9px; color:var(--ink)}
+.foc p{font-size:.88rem; margin:0}
+.foc .n{position:absolute; top:16px; right:18px; font-family:var(--f-mono); font-size:10px; letter-spacing:.1em; color:var(--rule)}
+
+/* glyph animations */
+.dash{stroke-dasharray:190; stroke-dashoffset:190; animation:draw 3s var(--ease) infinite}
+@keyframes draw{35%{stroke-dashoffset:0}85%{stroke-dashoffset:0}100%{stroke-dashoffset:-190}}
+.blink{animation:fade 2.2s ease-in-out infinite}
+@keyframes fade{0%,100%{opacity:.22}50%{opacity:1}}
+.orbit{animation:spin 10s linear infinite; transform-origin:50px 32px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pulse{animation:pulseR 2.4s ease-in-out infinite}
+@keyframes pulseR{0%,100%{r:3}50%{r:6.2}}
+.drift1{animation:d1 5s ease-in-out infinite}
+.drift2{animation:d2 6.4s ease-in-out infinite}
+.drift3{animation:d3 4.4s ease-in-out infinite}
+@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(9px,-7px)}}
+@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-11px,6px)}}
+@keyframes d3{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,9px)}}
+.rove{animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.wheelspin{animation:spin 2.2s linear infinite}
+.sweep{animation:sweepA 3.2s ease-in-out infinite; transform-origin:50px 42px}
+@keyframes sweepA{0%,100%{transform:rotate(-32deg); opacity:.25}50%{transform:rotate(32deg); opacity:1}}
+.ex1{animation:ex1 4s ease-in-out infinite}
+.ex2{animation:ex2 4s ease-in-out infinite}
+.ex3{animation:ex3 4s ease-in-out infinite}
+.ex4{animation:ex4 4s ease-in-out infinite}
+@keyframes ex1{0%,100%{transform:none}45%,65%{transform:translate(-16px,-11px)}}
+@keyframes ex2{0%,100%{transform:none}45%,65%{transform:translate(16px,-11px)}}
+@keyframes ex3{0%,100%{transform:none}45%,65%{transform:translate(-16px,11px)}}
+@keyframes ex4{0%,100%{transform:none}45%,65%{transform:translate(16px,11px)}}
+.bar{transform-origin:center 52px; animation:eq 1.1s ease-in-out infinite}
+@keyframes eq{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
+.strat{animation:fade 3s ease-in-out infinite}
+.marker{animation:slideX 6s ease-in-out infinite}
+@keyframes slideX{0%,100%{transform:translateX(0)}50%{transform:translateX(58px)}}
+
+/* ═══════════ SIM / GAME ═══════════ */
+.sim{margin:0; border:1.5px solid var(--rule); background:var(--surface); position:relative}
+.sim::before,.sim::after{content:""; position:absolute; width:17px; height:17px; z-index:4; pointer-events:none}
+.sim::before{top:-1.5px; left:-1.5px; border-top:2.5px solid var(--accent); border-left:2.5px solid var(--accent)}
+.sim::after{bottom:-1.5px; right:-1.5px; border-bottom:2.5px solid var(--accent); border-right:2.5px solid var(--accent)}
+.sim-bar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:10px 15px; border-bottom:1px solid var(--rule);
+  font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.sim-bar .live{display:flex; align-items:center; gap:7px; color:var(--accent); font-weight:700}
+.sim-bar .live i{width:6px; height:6px; background:var(--accent); border-radius:50%; animation:blip 1.6s infinite}
+@keyframes blip{0%,100%{opacity:1; transform:scale(1)}50%{opacity:.2; transform:scale(.7)}}
+.sim-bar .hint{margin-left:auto; text-transform:none; letter-spacing:.03em; opacity:.75}
+.sim canvas{display:block; width:100%; touch-action:pan-y}
+.sim-foot{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); border-top:1px solid var(--rule)}
+.knob{padding:13px 15px; border-right:1px solid var(--hair)}
+.knob:last-child{border-right:0}
+.knob label{display:flex; justify-content:space-between; gap:10px; align-items:baseline; font-family:var(--f-mono);
+  font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--muted)}
+.knob label b{color:var(--ink); font-weight:700; letter-spacing:.02em}
+.knob input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:20px; background:none; margin:5px 0 0; cursor:pointer}
+.knob input[type=range]::-webkit-slider-runnable-track{height:2px; background:var(--rule)}
+.knob input[type=range]::-moz-range-track{height:2px; background:var(--rule)}
+.knob input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:12px; height:12px; background:var(--accent); margin-top:-5px; border:0; transition:transform .15s}
+.knob input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.3)}
+.knob input[type=range]::-moz-range-thumb{width:12px; height:12px; background:var(--accent); border:0; border-radius:0}
+.gauge{padding:13px 15px; border-right:1px solid var(--hair); font-family:var(--f-mono)}
+.gauge:last-child{border-right:0}
+.gauge span{display:block; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--muted)}
+.gauge b{display:block; font-size:19px; font-weight:700; color:var(--accent); margin-top:6px; line-height:1}
+.gauge b.calm{color:var(--ink)}
+.btnrow{padding:13px 15px; display:flex; align-items:center}
+.gbtn{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; background:var(--ink);
+  color:var(--paper); border:1.5px solid var(--ink); padding:10px 18px; cursor:pointer; margin-right:-1.5px; transition:.18s var(--ease)}
+.gbtn:hover{background:var(--accent); border-color:var(--accent); color:#fff}
+.gbtn.ghost{background:none; color:var(--muted); border-color:var(--rule)}
+.gbtn.ghost:hover{color:var(--ink); border-color:var(--ink); background:none}
+.gbtn.is-active{background:var(--accent); border-color:var(--accent); color:#fff}
+.sim-note{padding:10px 15px; border-top:1px solid var(--hair); font-family:var(--f-mono); font-size:9.5px;
+  line-height:1.55; letter-spacing:.04em; color:var(--muted)}
+.drive-pad{display:grid; grid-template-columns:repeat(3,34px); grid-template-rows:repeat(2,30px); gap:4px; align-items:center; justify-content:center; padding:9px 12px}
+.drive-btn{font-family:var(--f-mono); font-size:13px; line-height:1; border:1.5px solid var(--rule); color:var(--ink); background:var(--paper); cursor:pointer}
+.drive-btn:hover,.drive-btn.pressed{border-color:var(--accent); background:var(--accent); color:#fff}
+.drive-btn.up{grid-column:2;grid-row:1}.drive-btn.left{grid-column:1;grid-row:2}.drive-btn.down{grid-column:2;grid-row:2}.drive-btn.right{grid-column:3;grid-row:2}
+
+
+
+
+
+
+
+
+
+/* ═══════════ 2D AUTONOMY EXPLORER ═══════════ */
+.autoexp{overflow:hidden}
+
+.autoexp-guide{
+  padding:14px 16px;
+  border-bottom:1px solid var(--rule);
+  background:var(--surface)
+}
+.autoexp-guide h3{
+  margin:0 0 7px;
+  font-family:var(--f-cond);
+  font-size:24px;
+  color:var(--ink)
+}
+.autoexp-guide ul{
+  margin:0;
+  padding-left:18px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:5px 24px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5
+}
+.autoexp-guide b{color:var(--ink)}
+
+.autoexp-selectbox{
+  padding:14px;
+  border-bottom:1px solid var(--rule);
+  background:var(--paper)
+}
+.autoexp-selectbox label{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:7px;
+  font-family:var(--f-mono)
+}
+.autoexp-selectbox label span{
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.10em;
+  text-transform:uppercase
+}
+.autoexp-selectbox label b{
+  color:var(--ink);
+  font-size:10px
+}
+.autoexp-select{
+  width:100%;
+  min-height:44px;
+  padding:8px 10px;
+  border:1.5px solid var(--rule);
+  background:var(--surface);
+  color:var(--ink);
+  font-family:var(--f-mono);
+  font-size:10px;
+  cursor:pointer
+}
+.autoexp-select:focus{outline:2px solid var(--accent);outline-offset:2px}
+
+.autoexp-hud{
+  display:grid;
+  grid-template-columns:1.5fr repeat(6,minmax(0,1fr));
+  border-bottom:1px solid var(--rule);
+  background:var(--surface)
+}
+.autoexp-hud>div{
+  min-width:0;
+  padding:10px 11px;
+  border-right:1px solid var(--hair);
+  font-family:var(--f-mono)
+}
+.autoexp-hud>div:last-child{border-right:0}
+.autoexp-hud span{
+  display:block;
+  color:var(--muted);
+  font-size:8px;
+  letter-spacing:.10em;
+  text-transform:uppercase
+}
+.autoexp-hud b{
+  display:block;
+  margin-top:3px;
+  color:var(--ink);
+  font-size:11px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+
+.autoexp-tuning{
+  border-top:1px solid var(--rule);
+  background:var(--surface)
+}
+.autoexp-tuning-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:11px 14px 8px
+}
+.autoexp-tuning-head span{
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:9px;
+  letter-spacing:.10em;
+  text-transform:uppercase
+}
+.autoexp-tuning-head b{
+  color:var(--ink);
+  font-family:var(--f-mono);
+  font-size:10px
+}
+.autoexp-tuning-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  border-top:1px solid var(--hair)
+}
+.autoexp-tune{
+  min-width:0;
+  padding:11px 13px;
+  border-right:1px solid var(--hair)
+}
+.autoexp-tune:last-child{border-right:0}
+.autoexp-tune label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:8px;
+  letter-spacing:.08em;
+  text-transform:uppercase
+}
+.autoexp-tune label b{
+  color:var(--ink);
+  font-size:10px
+}
+.autoexp-tune input[type="range"]{
+  width:100%;
+  margin-top:8px;
+  accent-color:var(--accent)
+}
+.autoexp-tuning-note{
+  padding:8px 14px 10px;
+  border-top:1px solid var(--hair);
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:8.5px;
+  line-height:1.5
+}
+.autoexp-errorbar{
+  height:5px;
+  margin-top:6px;
+  overflow:hidden;
+  background:var(--hair)
+}
+.autoexp-errorbar i{
+  display:block;
+  height:100%;
+  width:0%;
+  background:var(--accent);
+  transition:width .12s linear
+}
+
+.autoexp-actions{
+  display:flex;
+  align-items:center;
+  gap:0;
+  flex-wrap:wrap;
+  border-top:1px solid var(--rule);
+  background:var(--paper)
+}
+.autoexp-actions .btnrow{border-right:1px solid var(--hair)}
+.autoexp-actions .gbtn.on{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff
+}
+
+.autoexp-status{
+  padding:10px 14px;
+  border-top:1px solid var(--hair);
+  background:var(--surface);
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:9px;
+  line-height:1.55
+}
+.autoexp-status b{color:var(--ink)}
+
+.autoexp-progress{
+  height:4px;
+  background:var(--hair);
+  border-top:1px solid var(--rule);
+  overflow:hidden
+}
+.autoexp-progress i{
+  display:block;
+  width:0%;
+  height:100%;
+  background:var(--accent);
+  transition:width .12s linear
+}
+
+
+.autoexp.home-stack .autoexp-guide{display:none}
+.autoexp.home-stack .autoexp-selectbox{padding:11px 13px}
+.autoexp.home-stack .autoexp-select{min-height:40px}
+.autoexp.home-stack .autoexp-tuning{border-top:1px solid var(--hair)}
+.autoexp.home-stack .autoexp-tuning-head{padding:9px 12px 7px}
+.autoexp.home-stack .autoexp-tuning-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.autoexp.home-stack .autoexp-tune{padding:9px 10px}
+.autoexp.home-stack .autoexp-tuning-note{display:none}
+.autoexp.home-stack .autoexp-hud{
+  grid-template-columns:repeat(4,minmax(0,1fr))
+}
+.autoexp.home-stack .home-primary-hud>div:nth-child(5),
+.autoexp.home-stack .home-primary-hud>div:nth-child(6),
+.autoexp.home-stack .home-primary-hud>div:nth-child(7){display:none}
+.autoexp.home-stack .home-error-hud{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important
+}
+.autoexp.home-stack .autoexp-actions .btnrow{width:100%;border-right:0}
+.autoexp.home-stack .autoexp-info{
+  grid-template-columns:1.35fr 1fr
+}
+.autoexp.home-stack .autoexp-info>div:nth-child(2){display:none}
+.autoexp.home-stack .autoexp-status{font-size:8.5px}
+@media(max-width:760px){
+  .autoexp.home-stack .autoexp-tuning-grid{grid-template-columns:1fr 1fr}
+  .autoexp.home-stack .autoexp-hud{grid-template-columns:1fr 1fr}
+  .autoexp.home-stack .autoexp-info{grid-template-columns:1fr}
+}
+
+.autoexp-info{
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr;
+  border-top:1px solid var(--rule);
+  background:var(--paper)
+}
+.autoexp-info>div{
+  min-width:0;
+  padding:12px 13px;
+  border-right:1px solid var(--hair)
+}
+.autoexp-info>div:last-child{border-right:0}
+.autoexp-info .k{
+  display:block;
+  color:var(--accent);
+  font-family:var(--f-mono);
+  font-size:8px;
+  letter-spacing:.10em;
+  text-transform:uppercase
+}
+.autoexp-info b{
+  display:block;
+  margin-top:4px;
+  color:var(--ink);
+  font-size:11px;
+  line-height:1.45
+}
+.autoexp-info p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.55
+}
+
+@media(max-width:900px){
+  .autoexp-hud{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .autoexp-tuning-grid{grid-template-columns:1fr 1fr}
+  .autoexp-tune:nth-child(2){border-right:0}
+  .autoexp-tune{border-bottom:1px solid var(--hair)}
+  .autoexp-info{grid-template-columns:1fr}
+  .autoexp-info>div{border-right:0;border-bottom:1px solid var(--hair)}
+}
+@media(max-width:650px){
+  .autoexp-guide ul{grid-template-columns:1fr}
+  .autoexp-hud{grid-template-columns:1fr 1fr}
+  .autoexp-tuning-grid{grid-template-columns:1fr}
+  .autoexp-tune{border-right:0}
+}
+
+
+/* ═══════════ CONTACT ═══════════ */
+.contact-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);
+  gap:28px;
+  align-items:start
+}
+.contact-card{
+  border:1.5px solid var(--rule);
+  background:var(--surface);
+  padding:22px
+}
+.contact-card h2{
+  margin:0 0 6px;
+  font-family:var(--f-disp);
+  font-size:30px;
+  text-transform:uppercase;
+  line-height:1
+}
+.contact-card>p{
+  margin:0 0 20px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6
+}
+.contact-form{
+  display:grid;
+  gap:13px
+}
+.contact-field label{
+  display:block;
+  margin-bottom:5px;
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:8.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase
+}
+.contact-field input,
+.contact-field textarea{
+  width:100%;
+  border:1.5px solid var(--rule);
+  background:var(--paper);
+  color:var(--ink);
+  padding:10px 11px;
+  font:inherit;
+  border-radius:0;
+  outline:none
+}
+.contact-field input:focus,
+.contact-field textarea:focus{border-color:var(--accent)}
+.contact-field textarea{
+  min-height:150px;
+  resize:vertical
+}
+.contact-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap
+}
+.contact-actions button:disabled{
+  opacity:.55;
+  cursor:wait
+}
+.contact-status{
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:8.5px;
+  line-height:1.55
+}
+.contact-side{
+  display:grid;
+  gap:14px
+}
+.contact-mini,
+.contact-inbox{
+  border:1.5px solid var(--rule);
+  background:var(--paper);
+  padding:18px
+}
+.contact-mini span,
+.contact-inbox span{
+  display:block;
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:8px;
+  letter-spacing:.10em;
+  text-transform:uppercase
+}
+.contact-mini b,
+.contact-inbox b{
+  display:block;
+  margin-top:6px;
+  color:var(--ink);
+  font-size:13px
+}
+.contact-mini p,
+.contact-inbox p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.55
+}
+.contact-mini a{
+  color:var(--accent);
+  text-decoration:none
+}
+.contact-inbox{border-style:dashed;background:var(--surface)}
+@media(max-width:760px){
+  .contact-grid{grid-template-columns:1fr}
+}
+
+
+.gif-media{position:relative}
+.gif-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block
+}
+.gif-label{
+  position:absolute;
+  left:10px;
+  bottom:10px;
+  padding:6px 9px;
+  background:rgba(0,0,0,.72);
+  color:#fff;
+  font-family:var(--f-mono);
+  font-size:8px;
+  letter-spacing:.08em;
+  text-transform:uppercase
+}
+
+/* ═══════════ PROJECT ═══════════ */
+.project{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,42%); gap:0 42px; padding:42px 0 44px;
+  border-top:1px solid var(--rule); position:relative}
+.project.no-media{grid-template-columns:minmax(0,1fr)}
+.project.no-media>div:first-child{max-width:850px}
+.project::before{content:""; position:absolute; left:-30px; top:-1px; width:6px; height:0; background:var(--accent); transition:height .35s var(--ease)}
+.project:hover::before{height:42px}
+.p-idx{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; color:var(--rule); margin:0 0 6px}
+.p-head{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin:0 0 12px}
+.p-head .st{color:var(--accent)}
+.project h3{font-family:var(--f-disp); font-weight:600; font-size:clamp(1.55rem,2.8vw,2.15rem); line-height:1.05; text-transform:uppercase; margin:0 0 15px}
+.project p.body{font-size:.95rem; color:var(--muted); margin:0; max-width:56ch}
+.sim-slot{grid-column:1/-1; margin-top:34px}
+.spec{margin:22px 0 0; border-top:1px solid var(--rule)}
+.spec div{display:flex; align-items:baseline; gap:8px; padding:7px 0; border-bottom:1px solid var(--hair); font-family:var(--f-mono); font-size:11px; color:var(--muted)}
+.spec .lbl{text-transform:uppercase; letter-spacing:.06em; white-space:nowrap}
+.spec .fill{flex:1; border-bottom:1px dotted var(--rule); transform:translateY(-3px)}
+.spec .val{color:var(--accent); font-weight:700; white-space:nowrap}
+.roles{font-family:var(--f-mono); font-size:11px; color:var(--muted); margin:18px 0 0; line-height:1.7}
+.roles b{color:var(--ink); font-weight:400}
+.tagline{display:flex; flex-wrap:wrap; gap:6px; margin-top:15px}
+.tagline em{font-style:normal; font-family:var(--f-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--blue); border:1px solid var(--blue); padding:3px 8px; transition:.18s var(--ease)}
+.tagline em:hover{background:var(--blue); color:var(--paper)}
+.actions{display:flex; flex-wrap:wrap; margin-top:18px}
+.actions a,.actions button{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+  text-decoration:none; border:1.5px solid var(--rule); background:none; color:var(--muted); padding:7px 13px;
+  margin:0 -1.5px -1.5px 0; cursor:pointer; transition:.18s var(--ease)}
+.actions a:hover,.actions button:hover{color:var(--paper); background:var(--ink); border-color:var(--ink); position:relative; z-index:2}
+.actions button[aria-expanded="true"]{color:var(--accent); border-color:var(--accent); position:relative; z-index:2}
+
+.media{position:relative; aspect-ratio:16/9; overflow:hidden; background:var(--surface); border:1px solid var(--rule)}
+.media::before,.media::after{content:""; position:absolute; width:19px; height:19px; z-index:4; pointer-events:none}
+.media::before{top:-1px; left:-1px; border-top:2.5px solid var(--accent); border-left:2.5px solid var(--accent)}
+.media::after{bottom:-1px; right:-1px; border-bottom:2.5px solid var(--accent); border-right:2.5px solid var(--accent)}
+.media img,.media video,.media iframe{position:absolute; inset:0; width:100%; height:100%; border:0; object-fit:cover; transition:transform .6s var(--ease)}
+.media:hover img{transform:scale(1.05)}
+.media-btn{position:absolute; inset:0; width:100%; height:100%; background:none; border:0; padding:0; cursor:pointer; display:block}
+.media-btn::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(6,8,10,.62)); transition:opacity .25s var(--ease)}
+.play{position:absolute; left:17px; bottom:15px; z-index:3; display:flex; align-items:center; gap:11px; font-family:var(--f-mono);
+  font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#fff; pointer-events:none}
+.play span{width:32px; height:32px; background:var(--accent); display:grid; place-items:center; transition:transform .25s var(--ease)}
+.play svg{width:10px; height:10px; margin-left:2px}
+.media-btn:hover .play span{transform:scale(1.16)}
+.media-btn:hover::after{opacity:.68}
+.media.no-video{display:grid; place-items:center; border-style:dashed}
+.media.no-video::before,.media.no-video::after{border-color:var(--rule)}
+.media.no-video p{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); margin:0; text-align:center; line-height:2; padding:0 20px}
+
+/* ═══════════ TIMELINE ═══════════ */
+.tl{position:relative; padding-left:36px}
+.tl::before{content:""; position:absolute; left:5px; top:8px; bottom:8px; width:1.5px; background:var(--rule);
+  transform:scaleY(0); transform-origin:top; transition:transform 1.4s var(--ease)}
+.tl.in::before{transform:scaleY(1)}
+.tlx{position:relative; padding:0 0 32px}
+.tlx::before{content:""; position:absolute; left:-36px; top:8px; width:12px; height:12px; background:var(--paper);
+  border:2.5px solid var(--rule); transition:.3s var(--ease)}
+.tlx:hover::before{border-color:var(--accent); transform:rotate(45deg) scale(1.15)}
+.tlx.hot::before{border-color:var(--accent)}
+.tlx .when{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 5px; display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+.tlx .when b{font-weight:700; padding:2px 8px; border:1px solid var(--rule); color:var(--muted)}
+.tlx.hot .when b{border-color:var(--accent); color:var(--accent)}
+.tlx h3{font-family:var(--f-disp); font-weight:600; font-size:1.4rem; text-transform:uppercase; line-height:1.06; margin:0 0 4px}
+.tlx .org{font-size:.93rem; color:var(--ink); margin:0 0 9px}
+.tlx .org i{font-style:normal; color:var(--muted)}
+.tlx ul{margin:0; padding-left:18px}
+.tlx li{font-size:.9rem; color:var(--muted); margin-bottom:5px}
+.tlx li::marker{color:var(--accent)}
+
+/* ═══════════ PAPERS ═══════════ */
+.paper{display:grid; grid-template-columns:196px minmax(0,1fr); gap:0 28px; padding:24px 0; border-top:1px solid var(--rule); transition:.25s var(--ease)}
+.paper:hover{background:var(--surface)}
+.stat{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding-top:5px}
+.stat b{display:inline-block; font-weight:400; padding:4px 9px; border:1.5px solid var(--rule)}
+.stat b.pub{border-color:var(--green); color:var(--green); font-weight:700}
+.stat b.live{border-color:var(--accent); color:var(--accent); font-weight:700}
+.stat .yr{display:block; margin-top:9px}
+.paper h3{font-family:var(--f-disp); font-weight:600; font-size:1.34rem; line-height:1.14; text-transform:uppercase; margin:0 0 7px}
+.paper .authors{font-size:.9rem; color:var(--muted); margin:0}
+.paper .authors .me{color:var(--ink); font-weight:600}
+.paper .where{font-family:var(--f-mono); font-size:11px; color:var(--muted); margin:5px 0 0}
+.paper .pnote{font-family:var(--f-mono); font-size:10.5px; color:var(--accent); margin:6px 0 0; letter-spacing:.04em}
+.drawer{display:grid; grid-template-rows:0fr; transition:grid-template-rows .34s var(--ease)}
+.drawer.is-open{grid-template-rows:1fr; margin-top:13px}
+.drawer-inner{overflow:hidden}
+.dbox{position:relative; background:var(--surface); border:1px solid var(--rule); border-left:5px solid var(--accent); padding:16px 17px}
+.dbox pre{margin:0; font-family:var(--f-mono); font-size:11px; line-height:1.8; white-space:pre-wrap; word-break:break-word; color:var(--ink)}
+.dbox p{margin:0; font-size:.93rem; color:var(--muted); max-width:72ch}
+.copy-btn{position:absolute; top:9px; right:9px; font-family:var(--f-mono); font-size:9.5px; letter-spacing:.1em;
+  text-transform:uppercase; background:var(--paper); border:1.5px solid var(--rule); color:var(--muted); padding:5px 10px; cursor:pointer}
+.copy-btn:hover{color:#fff; background:var(--accent); border-color:var(--accent)}
+
+/* ═══════════ CARDS / AWARDS / TOOLKIT ═══════════ */
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.card{border:1.5px solid var(--rule); padding:24px; margin:0 -1.5px -1.5px 0; display:block; text-decoration:none;
+  transition:.25s var(--ease); position:relative; overflow:hidden}
+.card::after{content:""; position:absolute; left:0; bottom:0; height:3px; width:100%; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .4s var(--ease)}
+.card:hover{border-color:var(--accent); z-index:2; transform:translateY(-4px)}
+.card:hover::after{transform:scaleX(1)}
+.card h3{font-family:var(--f-disp); font-weight:600; font-size:1.2rem; text-transform:uppercase; line-height:1.1; margin:0 0 10px}
+.card p{font-size:.89rem; color:var(--muted); margin:0}
+.card .src{font-family:var(--f-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-top:15px; display:block}
+.award{display:grid; grid-template-columns:196px minmax(0,1fr); gap:0 28px; padding:18px 0; border-top:1px solid var(--rule); transition:.25s var(--ease)}
+.award:hover{background:var(--surface)}
+.award h3{font-family:var(--f-disp); font-weight:600; font-size:1.24rem; text-transform:uppercase; margin:0 0 3px; line-height:1.08}
+.award p{font-size:.88rem; color:var(--muted); margin:0}
+.kit{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:30px}
+.kit h3{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+  margin:0 0 11px; font-weight:700; padding-bottom:9px; border-bottom:1.5px solid var(--rule)}
+.kit p{font-size:.89rem; color:var(--muted); margin:0}
+
+.pager{display:flex; justify-content:flex-end; align-items:center; gap:16px; flex-wrap:wrap;
+  border-top:2px solid var(--ink); margin-top:10px; padding:26px 0 0}
+.pager a{font-family:var(--f-disp); font-weight:700; font-size:clamp(1.4rem,3.4vw,2.2rem); text-transform:uppercase;
+  text-decoration:none; display:flex; align-items:center; gap:14px; transition:.25s var(--ease)}
+.pager a:hover{color:var(--accent); gap:26px}
+.pager small{display:block; font-family:var(--f-mono); font-size:10px; letter-spacing:.15em; color:var(--muted); margin-bottom:2px}
+
+footer{padding:28px 0 34px; border-top:1px solid var(--rule)}
+footer h2{font-family:var(--f-disp); font-weight:700; font-size:clamp(1.35rem,3vw,1.9rem); text-transform:uppercase; line-height:1; margin:0 0 7px}
+footer p{color:var(--muted); max-width:52ch; margin:0 0 12px; font-size:11px}
+footer .meta-row{gap:8px}
+footer .meta-row a{font-size:9px; padding:7px 10px}
+footer .colophon{margin-top:16px; font-size:8px}
+.colophon{margin-top:56px; padding-top:20px; border-top:2px solid var(--ink); font-family:var(--f-mono); font-size:10.5px;
+  letter-spacing:.05em; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+
+.reveal{opacity:0; transform:translateY(20px)}
+.reveal.in{opacity:1; transform:none; transition:opacity .65s var(--ease), transform .65s var(--ease)}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .reveal,.dim h2,.dim .qty,.dim .cap,.pagehead .kicker,.pagehead .sub,.role,.meta-row{opacity:1; transform:none}
+  .pagehead h1 span i{transform:none} .pagehead::before{height:calc(100% - 12px)}
+  .dim .ln{transform:scaleX(1)} .tl::before{transform:scaleY(1)} .ticker-track{animation:none}
+}
+@media (max-width:900px){
+  .pagehead{padding-left:24px; padding-right:24px}
+  .pagehead::before{left:10px}
+  .role{grid-template-columns:1fr}
+  .role div{padding:10px 0; border-right:0; border-bottom:1px solid var(--hair)}
+  .role div:last-child{border-bottom:0}
+  .bio{grid-template-columns:1fr; gap:30px 0}
+  .portrait{max-width:320px}
+  .project{grid-template-columns:1fr; gap:24px 0}
+  .project > div:first-child{order:2} .project .media{order:1} .project .sim-slot{order:3}
+  .project::before{display:none}
+  .paper,.award{grid-template-columns:1fr; gap:10px}
+  .stat{padding-top:0; display:flex; gap:12px; align-items:center}
+  .stat .yr{display:inline; margin:0}
+  .plate nav{position:fixed; top:60px; left:0; right:0; background:var(--paper); border-bottom:2px solid var(--ink);
+    flex-direction:column; align-items:stretch; padding:8px 0; display:none}
+  .plate nav.open{display:flex}
+  .plate nav a{padding:12px 30px; border-bottom:1px solid var(--hair)}
+  .plate nav a.on{color:var(--accent)}
+  .nav-ink{display:none}
+  .burger{display:block}
+  .theme-btn{margin:10px 30px}
+  .dim h2{font-size:17px; padding:0 10px}
+  .sim-bar .hint{display:none}
+  .knob,.gauge{border-right:0; border-bottom:1px solid var(--hair)}
+}
+
+
+@media(max-width:900px){
+  .plate{padding-left:14px;padding-right:14px}
+  .plate nav{
+    display:flex;
+    position:relative;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    width:auto;
+    background:transparent;
+    border:0;
+    padding:0
+  }
+  .plate nav a{
+    display:block;
+    padding:7px 8px;
+    font-size:13px
+  }
+  .theme-btn{
+    margin-left:8px;
+    flex:0 0 31px
+  }
+  .burger{display:none}
+}
+@media(max-width:620px){
+  .plate nav a{
+    padding:6px 5px;
+    font-size:11px;
+    letter-spacing:.06em
+  }
+  .theme-btn{
+    width:28px;
+    height:28px;
+    margin-left:5px;
+    flex-basis:28px
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<header class="plate">
+  <div class="wrap">
+    <a class="tag" href="#/">MM · Maruf</a>
+    <button class="burger" id="burger" aria-label="Menu">≡</button>
+    <nav id="nav">
+      <a href="#/">Home</a>
+      <a href="#/about">About me</a>
+      <a href="#/projects">Projects</a>
+      <a href="#/papers">Papers</a>
+      <a href="#/contact">Contact</a>
+      <span class="nav-ink" id="navInk"></span>
+      <button class="theme-btn" id="themeBtn" aria-label="Switch theme"></button>
+    </nav>
+  </div>
+</header>
+
+<div id="view"></div>
+
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   ▓▓ EDIT EVERYTHING IN THIS BLOCK — nothing else ▓▓
+   ════════════════════════════════════════════════════════════════ */
+
+const SITE = {
+  name:"Md Mesbahul", surname:"Maruf",
+  role:[
+    ["Position","Ph.D. Student, Electrical & Computer Engineering"],
+    ["Institution","Auburn University"],
+    ["Focus","Robotics · Learning-based control · Multi-agent systems"]
+  ],
+  lede:"I am a Ph.D. student in <strong>Electrical &amp; Computer Engineering at Auburn University</strong>, working on robotics, learning-based control, state estimation, and multi-agent robotic systems. I completed my M.S. in Biosystems Engineering at Auburn, where I developed and field-tested a four-wheel skid-steer agricultural robot integrating terrain-responsive suspension, motion control, multisensor navigation, and 3D plant phenotyping.",
+  links:[
+    { label:"CV", href:"cv.pdf" },
+    { label:"LinkedIn", href:"https://www.linkedin.com/in/mesbah-maruf/" },
+    { label:"Email", href:"mailto:mzm0411@auburn.edu" }
+  ],
+  contactBlurb:"Research, collaboration, or professional inquiry.",
+  footerLinks:[
+    { label:"Email", href:"mailto:mzm0411@auburn.edu" },
+    { label:"LinkedIn", href:"https://www.linkedin.com/in/mesbah-maruf/" }
+  ],
+  ticker:["ROS 2","Learning-Based Control","Inverse Kalman Filtering","Kalman–Bucy","Pure Pursuit","EKF Sensor Fusion",
+          "Multi-Agent Systems","Swarm Robotics","3D Gaussian Splatting","Skid-Steer Kinematics","Jetson AGX Orin",
+          "ZED Stereo Vision","MATLAB / Simulink","Gazebo","Adaptive Control","ANSYS FEA"]
+};
+
+/* ─── ABOUT ME ────────────────────────────────────────────────
+   PHOTO: drop your portrait in the repo at media/portrait.jpg
+   (drag and drop into GitHub → Add file → Upload files).
+   Until it exists the frame shows a tidy dashed placeholder.
+   A vertical 4:5 crop, head and shoulders, works best.
+   ──────────────────────────────────────────────────────────── */
+const ABOUT = {
+  portrait:"media/portrait.jpg",
+  capLeft:"Md Mesbahul Maruf",
+  capRight:"Auburn, Alabama",
+  paragraphs:[
+    "I am currently a <strong>Ph.D. student in Electrical &amp; Computer Engineering at Auburn University</strong> under <strong>Dr. Bosen Lian</strong>. My research focuses on robotics, learning-based control, state estimation, and multi-agent robotic systems, with emphasis on ground robotics and coordinated autonomy.",
+    "Before that, I completed my <strong>M.S. in Biosystems Engineering at Auburn University</strong> under <strong>Dr. Tanzeel U. Rehman</strong>. I developed an integrated agricultural robot combining terrain-adaptive mobility, four-wheel motion control, multisensor navigation, and pose-regularized 3D plant phenotyping.",
+    "My path into robotics began during my <strong>B.S. in Mechanical Engineering at the Islamic University of Technology (IUT)</strong> in Bangladesh through space robotics. As <strong>Team Lead</strong> of Team IUT Mars Rover, I led the team across electro-mechanical design, control, navigation, and full-system integration."
+  ],
+  closeLabel:"",
+  close:""
+};
+
+/* ─── HOBBIES ─── glyph: teardown | music | history | spark ─── */
+const HOBBIES = [
+  {
+    title:"Understanding How Machines Become Robots",
+    glyph:"teardown",
+    text:"My path into robotics began with a simple question: how do mechanical systems become capable machines? That curiosity pulled me into CAD, structural analysis, mechanisms, drivetrain and suspension design, fabrication, and hands-on prototyping. It gave me a physical understanding of robotics from the ground up."
+  },
+  {
+    title:"Connecting Mechanics with Electronics",
+    glyph:"robotics",
+    text:"Building complete robotic systems pushed me beyond mechanical design into circuits, sensors, actuators, embedded controllers, power systems, and real-time hardware integration. I became interested not only in how a robot is built, but in how its mechanical, electrical, and computational layers work together as one system."
+  },
+  {
+    title:"Giving Robots Perception",
+    glyph:"estimation",
+    text:"The next step was enabling robots to interpret their surroundings. I explored computer vision, feature detection, object recognition, visual odometry, and learning-based perception, which shifted my focus from simply moving a machine to making it aware of the environment around it."
+  },
+  {
+    title:"Turning Perception into Autonomous Navigation",
+    glyph:"robotics",
+    text:"Perception became most meaningful when it could guide motion. I integrated GPS-based navigation, visual information, waypoint logic, sensor fusion, and autonomous decision-making so that robotic platforms could navigate real environments rather than operate as isolated mechanical systems."
+  },
+  {
+    title:"Closing the Loop with Control & Estimation",
+    glyph:"adaptive",
+    text:"Reliable autonomy required a deeper understanding of feedback. My work increasingly centered on motion control, path tracking, dynamic behavior, state estimation, and sensor fusion—connecting what the robot senses with how it should respond, correct itself, and remain stable during physical operation."
+  },
+  {
+    title:"Building Richer Environmental Understanding",
+    glyph:"estimation",
+    text:"I then expanded from navigation-level sensing toward detailed representation of the environment through stereo vision, 3D point clouds, segmentation, geometric processing, and 3D Gaussian Splatting. This strengthened my interest in combining perception, computation, and robotics to extract useful information from complex real-world scenes."
+  },
+  {
+    title:"Learning, Adaptation & Autonomy under Uncertainty",
+    glyph:"adaptive",
+    text:"Real robots rarely operate under ideal conditions. Uneven terrain, vibration, changing dynamics, sensing errors, and uncertain environments motivated me toward adaptive and learning-based control, inverse estimation, and data-driven approaches that can improve robotic decision-making while maintaining reliable behavior."
+  },
+  {
+    title:"From One Intelligent Robot to Coordinated Systems",
+    glyph:"swarm",
+    text:"My broader research direction now extends from single-robot autonomy to systems of interacting robots. I am interested in distributed control and estimation, cooperative decision-making, multi-agent coordination, and learning-enabled autonomy that can support reliable teams of robots operating together under uncertainty."
+  }
+];
+
+/* ─── EDUCATION ─── */
+const EDUCATION = [
+  { hot:true, tag:"Doctorate", when:"Aug 2026 — Present",
+    title:"Ph.D., Electrical & Computer Engineering", org:"Department of Electrical & Computer Engineering, Auburn University", place:"Auburn, AL",
+    bullets:["Focus: robotics, learning-based and adaptive control, estimation, multi-agent systems and swarm robotics.",
+             "Doctoral Supervisor: Dr. Bosen Lian."] },
+  { hot:false, tag:"Masters", when:"Jan 2024 — Jul 2026",
+    title:"M.S., Biosystems Engineering", org:"Auburn University", place:"Auburn, AL",
+    bullets:["Thesis: Design and Development of an Integrated In-Field Agricultural Robot for Terrain-Adaptive Mobility, Navigation, and Plant Phenotyping.",
+             "M.S. Supervisor: Dr. Tanzeel U. Rehman."] },
+  { hot:false, tag:"Bachelors", when:"Jan 2017 — Mar 2021",
+    title:"B.S., Mechanical Engineering", org:"Islamic University of Technology (IUT)", place:"Gazipur, Bangladesh",
+    bullets:["Thesis: Room Acoustic Parameters of an Auditorium using the Ray Tracing Method."] }
+];
+
+/* ─── PROFESSIONAL EXPERIENCE ─── */
+const EXPERIENCE = [
+  { hot:true, tag:"Research", when:"Aug 2026 — Present",
+    title:"Graduate Research Assistant", org:"Electrical & Computer Engineering, Auburn University", place:"Auburn, AL",
+    bullets:[
+      "Research in robotics, learning-based control, state estimation, and multi-agent robotic systems.",
+      "Current work includes continuous-time inverse Kalman filtering and coordinated multi-UAV autonomy using numerical simulation, MATLAB/Simulink, and ROS 2 workflows."
+    ] },
+  { hot:false, tag:"Research", when:"Jan 2024 — Jul 2026",
+    title:"Graduate Research Assistant", org:"Biosystems Engineering, Auburn University", place:"Auburn, AL",
+    bullets:[
+      "Designed, built and experimentally evaluated an autonomous agricultural robot — terrain-adaptive suspension, mechanical integration, sensing architecture and field-testing workflows.",
+      "Implemented PID control, Pure Pursuit navigation and EKF fusion of GPS, IMU and wheel odometry over ROS 2, with Simscape and ANSYS analysis.",
+      "Built a multi-stereo 3D vision pipeline for plant phenotyping, validated against ground-truth field measurements."
+    ] },
+  { hot:false, tag:"Industry", when:"Aug 2021 — Dec 2022",
+    title:"Mechanical Engineer, Research & Development", org:"Walton Group", place:"Gazipur, Bangladesh",
+    bullets:[
+      "Led CAD, FEA, GD&T and DFM for plastic and metal production components.",
+      "Designed injection-moulded parts and improved manufacturing processes, reducing material waste while improving quality and cost efficiency."
+    ] },
+  { hot:false, tag:"Industry", when:"Dec 2020 — Jul 2021",
+    title:"Robotics Engineer", org:"Cognition Ltd.", place:"Dhaka, Bangladesh",
+    bullets:[
+      "Designed two autonomous mobile robots covering kinematics, actuation, motion control and sensor integration.",
+      "Developed real-time vision tracking, obstacle avoidance, and Kalman-filter fusion of IMU and GPS for localization and autonomous navigation."
+    ] }
+];
+
+/* ─── RESEARCH FOCUS (home) ─── */
+const FOCUS = [
+  { title:"Robotics", glyph:"robotics",
+    text:"Whole machines, not subsystems — chassis, drivetrain, suspension, power, compute and sensing designed together so the thing survives a real field." },
+  { title:"Learning & adaptive control", glyph:"adaptive",
+    text:"Controllers that retune themselves as the plant changes: load shifts, tires slip, terrain hardens. The gain you set in the lab is rarely the gain you want outside." },
+  { title:"State estimation", glyph:"estimation",
+    text:"Kalman filtering and its inverses. My PhD asks the backwards question — given how an estimator behaved, can you recover the process-noise covariance it assumed?" },
+  { title:"Swarm robotics", glyph:"swarm",
+    text:"Scaling multi-UAV autonomy until the practical problems dominate: sensing, bandwidth, localization drift, and what breaks as you add the twentieth agent." }
+];
+
+/* ─── SHARED AGRICULTURAL ROBOT VIDEO ───
+   Upload one file to: media/agricultural-robot-demo.mp4
+   The first three projects below all use this same platform demo.
+   ──────────────────────────────────────────────────────────── */
+const AGRI_ROBOT_VIDEO = {
+  type:"file",
+  src:"media/agricultural-robot-demo.mp4",
+  label:"Integrated Robot Platform Demo"
+};
+
+const MULTI_UAV_VIDEO = {
+  type:"file",
+  src:"media/multi-uav-demo.mp4",
+  label:"Multi-UAV Demo"
+};
+
+/* ─── PROJECTS ─── */
+const PROJECTS = [
+  { title:"Terrain-adaptive agricultural robotic platform & suspension",
+    status:"MS research", year:"2024—2026", video:AGRI_ROBOT_VIDEO, sim:"suspension",
+    blurb:"Ground-up development of a four-wheel skid-steer agricultural robot for blueberry-field operation. The platform integrated the structural frame, independent wheel-drive assemblies, adjustable air-spring suspension, electrical power and computing, sensing, communication, control, navigation, and synchronized data acquisition. The suspension was evaluated with a nonlinear quarter-car model using pressure-dependent stiffness, asymmetric damping, travel limits, and unilateral tire-ground contact.",
+    spec:[["RMS chassis acceleration","−11.04%"],["Tire-unloading occurrence","−16.92%"],["Platform","4-wheel skid-steer"]],
+    role:"Lead developer — platform design, integration, suspension, control and field testing",
+    collaborators:"M.S. research under Dr. Tanzeel U. Rehman",
+    tags:["ground robotics","suspension","mechatronics"] },
+
+  { title:"Four-wheel motion control, autonomous navigation & localization",
+    status:"MS research", year:"2024—2026", video:AGRI_ROBOT_VIDEO, sim:"navigation",
+    blurb:"Development and field evaluation of the robot's wheel-to-path control and localization architecture. The system combined independent wheel-speed regulation, actuator-current and torque constraints, skid-steer motion conversion, path tracking, and multisensor localization using wheel odometry, inertial measurements, and GPS. Field experiments demonstrated coordinated four-wheel motion, controlled actuator demand, stable path tracking, and substantially improved localization relative to raw GPS.",
+    spec:[["Localization error vs. raw GPS","−76.6%"],["Reference for evaluation","Independent RTK"],["Modes","Manual + autonomous"]],
+    role:"Lead developer — motion control, navigation, localization and field validation",
+    collaborators:"M.S. research under Dr. Tanzeel U. Rehman",
+    tags:["control","navigation","EKF","Pure Pursuit"] },
+
+  { title:"Pose-regularized 3D Gaussian Splatting for canopy phenotyping",
+    status:"MS research", year:"2025—2026", media:false, sim:"cloud",
+    blurb:"A pose-regularized multi-camera reconstruction workflow for blueberry phenotyping under repetitive foliage, severe occlusion, limited camera overlap, and weak visual features. Calibrated camera parameters, fixed inter-camera geometry, synchronized imaging, and sensor-derived motion constrain camera poses before 3D Gaussian Splatting. Ground-referenced plant separation and geometry are then used to estimate plant height and canopy volume.",
+    spec:[["Plant height NRMSE","4.77%"],["Canopy volume NRMSE","6.68%"],["R² height / volume","0.883 / 0.960"]],
+    role:"Lead — pipeline design, field capture, reconstruction and validation",
+    collaborators:"M.S. research under Dr. Tanzeel U. Rehman",
+    tags:["3D vision","Gaussian Splatting","phenotyping"] },
+
+  { title:"Learning-Based Inverse Kalman Filtering",
+    status:"PhD research · ongoing", year:"2026—", media:false,
+    blurb:"Development of a continuous-time learning-based, model-free inverse Kalman filtering framework that reconstructs estimator information directly from observed expert state-estimate and measurement data. The learner uses only the recorded estimate and measurement signals together with the known measurement structure and fixed measurement-noise covariance; the plant dynamics matrix is not supplied and is not explicitly identified. From data, the method learns the demonstrated Kalman gain and the closed-loop matrix action required for covariance recovery, then carries out the inverse covariance–gain iteration to recover the process-noise covariance, estimation-error covariance, and Kalman gain. Model-based inverse filtering and forward Kalman–Bucy filtering are used only as references for numerical validation. The research connects data-driven state estimation, inverse estimation, and learning-enabled autonomy under uncertain system dynamics.",
+    spec:[["Approach","Learning-based model-free IKF"],["Learning data","Estimate + measurement signals"],["Recovered quantities","Q, P, and K"]],
+    role:"Research — model-free inverse estimation, data-driven state estimation, and validation",
+    collaborators:"Doctoral research under Dr. Bosen Lian",
+    tags:["model-free learning","inverse estimation","state estimation","Kalman filtering","learning-enabled autonomy"] },
+
+  { title:"Multi-UAV and multi-agent robotic systems",
+    status:"PhD research · ongoing", year:"2026—", video:MULTI_UAV_VIDEO,
+    blurb:"Research on coordinated autonomous robotic systems with emphasis on learning-based control, distributed coordination, state estimation, and practical multi-agent implementation. The work uses ROS 2 and autopilot-based aerial platforms as a testbed for coordination, sensing, communication, and localization challenges.",
+    role:"Ph.D. research", collaborators:"Doctoral research under Dr. Bosen Lian", tags:["multi-agent systems","UAVs","learning-based control"] },
+
+  { title:"Project Anirban — Mars rover",
+    status:"Space robotics · undergraduate", year:"2017—2020",
+    video:{ type:"gif", src:"media/mars-rover.gif", label:"Mars Rover Demo" },
+    blurb:"Project Anirban was Team IUT Mars Rover's competition rover for international Mars-rover challenges. As Team Lead, I led the full multidisciplinary team and contributed directly to electro-mechanical design, chassis and suspension, system integration, control architecture, autonomous navigation, and competition testing.",
+    spec:[["Indian Rover Challenge 2019","2nd Runner-Up"],["Autonomous navigation, 2019","Highest score"],["European Rover Challenge","Finalist"]],
+    role:"Team Lead — full-team leadership, electro-mechanical design, control, navigation and integration",
+    collaborators:"Team IUT Mars Rover · Islamic University of Technology",
+    tags:["space robotics","electro-mechanical design","control & navigation"] },
+
+  { title:"Autonomous food delivery robot",
+    status:"Robotics project", year:"2020—2021",
+    video:{ type:"gif", src:"media/food-delivery-robot.gif", label:"Food Delivery Robot Demo" },
+    blurb:"Development of a differential-drive mobile robot combining a fabricated aluminum/acrylic chassis, embedded motor control, GPS-based navigation, computer vision, obstacle sensing, and low-level motion control. The project connected mechanical design with embedded electronics and autonomous mobile-robot software.",
+    role:"Robotics engineer — mechanical design, motion control and sensor integration",
+    tags:["mobile robotics","embedded systems","computer vision"] }
+];
+
+/* ─── PAPERS ─── status: Published | In press | In preparation | Thesis ─── */
+const PAPERS = [
+  { title:"A graph convolutional network approach for hyperspectral image analysis of blueberries physiological traits under drought stress",
+    authors:"Md. Hasibur Rahman, Savannah Busby, Sajid Hanif, Md Mesbahul Maruf, Faraz Ahmad, Sushan Ru, Alvaro Sanz-Saez, Jingyi Zheng, Tanzeel U. Rehman",
+    venue:"Smart Agricultural Technology", venueLong:"Smart Agricultural Technology 10 (2025), 100743",
+    type:"journal", year:2025, status:"Published", links:{} },
+  { title:"Additive Manufacturing of High-Performance Polymers for Extreme Environments",
+    authors:"Md Mesbahul Maruf",                    // ← REPLACE with the full author list
+    venue:"Advanced Science (Wiley)", venueLong:"Advanced Science, Wiley",
+    type:"journal", year:2026, status:"In press",
+    note:"Accepted and in production", links:{} },
+  { title:"Design and Development of an Integrated In-Field Agricultural Robot for Terrain-Adaptive Mobility and Navigation",
+    authors:"Md Mesbahul Maruf, Tanzeel U. Rehman",
+    venue:"In preparation", venueLong:"Manuscript in preparation",
+    type:"journal", year:2026, status:"In preparation",
+    links:{} },
+  { title:"Robot-Integrated Pose-Regularized 3D Gaussian Splatting for High-Throughput Blueberry Height and Volume Phenotyping",
+    authors:"Md Mesbahul Maruf, Tanzeel U. Rehman",
+    venue:"In preparation", venueLong:"Manuscript in preparation",
+    type:"journal", year:2026, status:"In preparation",
+    links:{} },
+  { title:"System Design and Architecture of Agricultural Robots: An In-Depth Review",
+    authors:"Md Mesbahul Maruf, Tanzeel U. Rehman",
+    venue:"Review article", venueLong:"Review article, manuscript in preparation",
+    type:"review", year:2026, status:"In preparation", links:{} },
+  { title:"Design and Development of an Integrated In-Field Agricultural Robot for Terrain-Adaptive Mobility, Navigation, and Plant Phenotyping",
+    authors:"Md Mesbahul Maruf",
+    venue:"MS thesis, Auburn University", venueLong:"MS thesis, Auburn University, Auburn, Alabama",
+    school:"Auburn University", type:"thesis", year:2026, status:"Thesis",
+    links:{} },
+  { title:"Room acoustic parameters of an auditorium using the ray tracing method",
+    authors:"Md Mesbahul Maruf",
+    venue:"BS thesis, Islamic University of Technology", venueLong:"BS thesis, Islamic University of Technology, Bangladesh",
+    school:"Islamic University of Technology", type:"thesis", year:2021, status:"Thesis", links:{} }
+];
+
+const INDUSTRY = [
+  { name:"Electronic locker system", src:"Walton Group · SolidWorks, FEA",
+    blurb:"Led design of a Grade 316 stainless enclosure — laser cut, precision bent, TIG welded at load joints, with CNC-machined locking rods and 3D-printed plastics prepared for mold production." },
+  { name:"CHORUS desk speaker WDS150", src:"Walton Group · Shipped product",
+    blurb:"Mechanical and acoustic design of a consumer speaker that reached mass production — chamber tuning for density, stiffness, damping and resonance, with CNC fabrication via SolidCAM." },
+  { name:"CHORUS Bluetooth speaker PS05", src:"Walton Group · Shipped product",
+    blurb:"Aluminium-extrusion body with injection-moulded plastics engineered for material flow, wall thickness, draft angles and parting lines; Moldflow analysis validated manufacturability." }
+];
+
+const AWARDS = [
+  { title:"Excellence in Productivity Award — Farm Robotics Challenge", where:"FIRA-USA", year:2024 },
+  { title:"Finalist — European Rover Challenge", where:"Team IUT Mars Rover", year:2020 },
+  { title:"2nd Runner-Up — Indian Rover Challenge", where:"Team IUT Mars Rover · highest autonomous-navigation score", year:2019 },
+  { title:"OIC Scholarship", where:"Islamic University of Technology", year:2017 },
+  { title:"i-Genius — Grameenphone–Prothom Alo Internet Festival", where:"Grameenphone × Prothom Alo · Bangladesh", year:2012 }
+];
+
+
+const LEADERSHIP = [
+  { title:"Team Lead — Team IUT Mars Rover",
+    where:"Islamic University of Technology · multidisciplinary rover team",
+    year:"2017–2020",
+    blurb:"Led the team across electro-mechanical design, control, navigation, system integration, and competition testing." }
+];
+
+const TOOLKIT = [
+  { group:"Control & estimation", items:"PID, LQR, Kalman filtering and EKF, adaptive and learning-based control, Pure Pursuit, state-space modelling, kinematic and dynamic modelling, trajectory tracking." },
+  { group:"Robotics & perception", items:"ROS 2, Gazebo, CoppeliaSim, OpenCV, PyTorch, YOLOv5/v8, CNNs, stereo vision, 3D point clouds, optical flow, multi-sensor integration." },
+  { group:"Programming & embedded", items:"MATLAB and Simulink, Python, C/C++, Arduino, STM32, NVIDIA Jetson, motor and sensor interfacing, real-time robotic control." },
+  { group:"CAD/CAE & fabrication", items:"SolidWorks, Fusion 360, CATIA, ANSYS, COMSOL, Abaqus, Moldflow, FEA, GD&T, DFM, 3D printing, laser cutting, CNC machining." }
+];
+
+const COPY = {
+  homeFocus:"My work connects physical robotic systems with control, estimation, learning, and multi-agent autonomy — from ground robotics to current Ph.D. research.",
+  homeSim:"An illustrative browser demonstration inspired by my M.S. navigation architecture: Pure Pursuit path tracking with EKF-style fusion of drifting odometry and noisy GPS. It is a concept demo, not a replay of field-test data.",
+  about:"",
+  projects:"Selected research and engineering projects spanning my M.S. research, current Ph.D. work, and earlier robotics projects. The browser interactions are illustrative demonstrations of the underlying ideas.",
+  papers:"Publications, manuscripts, and theses. Published metadata is linked where a public record is available; work in preparation is labeled separately.",
+  play:"A 2D interactive autonomous-systems explorer for beginners. Choose from 120 robot autonomy modes, run a 40-second live demonstration, and watch how the robot changes its path, speed, sensing, target behavior, and obstacle response.",
+  industry:"Production design from two years as a mechanical engineer in industry — CAD, FEA and design for manufacture on parts that shipped."
+};
+
+/* ════════════════════════════════════════════════════════════════
+   ▓▓ NOTHING BELOW HERE NEEDS EDITING ▓▓
+   ════════════════════════════════════════════════════════════════ */
+
+const $ = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const FULLNAME = `${SITE.name} ${SITE.surname}`;
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const gauss = () => { let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+const pad2 = n => String(n).padStart(2,"0");
+
+
+/* ───────────── glyphs ───────────── */
+const GLYPH = {
+  robotics:`<svg viewBox="0 0 100 64" fill="none">
+    <line x1="6" y1="54" x2="94" y2="54" stroke="var(--rule)" stroke-width="1.4"/>
+    <path class="sweep" d="M50 42 L20 12 M50 42 L80 12" stroke="var(--blue)" stroke-width="1.2" opacity=".55"/>
+    <g class="rove">
+      <rect x="30" y="26" width="40" height="16" stroke="var(--accent)" stroke-width="2.2"/>
+      <line x1="50" y1="26" x2="50" y2="16" stroke="var(--accent)" stroke-width="2"/>
+      <circle cx="50" cy="14" r="2.6" fill="var(--accent)"/>
+      <g class="wheelspin" style="transform-origin:37px 48px"><circle cx="37" cy="48" r="6" stroke="var(--ink)" stroke-width="2"/><line x1="37" y1="42" x2="37" y2="54" stroke="var(--ink)" stroke-width="1"/></g>
+      <g class="wheelspin" style="transform-origin:63px 48px"><circle cx="63" cy="48" r="6" stroke="var(--ink)" stroke-width="2"/><line x1="63" y1="42" x2="63" y2="54" stroke="var(--ink)" stroke-width="1"/></g>
+    </g></svg>`,
+  adaptive:`<svg viewBox="0 0 100 64" fill="none">
+    <line x1="4" y1="24" x2="96" y2="24" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 4" opacity=".5"/>
+    <path class="dash" d="M4 58 C 20 58, 24 8, 38 26 S 56 36, 66 24 S 84 24, 96 24" stroke="var(--accent)" stroke-width="2.3" stroke-linecap="round"/>
+    <circle class="blink" cx="96" cy="24" r="3.2" fill="var(--accent)"/></svg>`,
+  estimation:`<svg viewBox="0 0 100 64" fill="none">
+    <g class="blink" fill="var(--blue)"><circle cx="14" cy="36" r="2.2"/><circle cx="26" cy="20" r="2.2"/><circle cx="38" cy="42" r="2.2"/>
+    <circle cx="50" cy="18" r="2.2"/><circle cx="62" cy="38" r="2.2"/><circle cx="74" cy="22" r="2.2"/><circle cx="86" cy="34" r="2.2"/></g>
+    <path class="dash" d="M8 37 C 28 27, 44 31, 62 28 S 88 27, 94 28" stroke="var(--accent)" stroke-width="2.3" stroke-linecap="round"/></svg>`,
+  swarm:`<svg viewBox="0 0 100 64" fill="none">
+    <circle cx="50" cy="32" r="20" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 4"/>
+    <g class="orbit" fill="var(--accent)"><circle cx="50" cy="12" r="2.8"/><circle cx="70" cy="32" r="2.8"/>
+    <circle cx="50" cy="52" r="2.8"/><circle cx="30" cy="32" r="2.8"/></g>
+    <g fill="var(--blue)"><circle class="drift1" cx="22" cy="16" r="2.3"/><circle class="drift2" cx="80" cy="48" r="2.3"/>
+    <circle class="drift3" cx="28" cy="50" r="2.3"/></g></svg>`,
+  teardown:`<svg viewBox="0 0 100 64" fill="none">
+    <rect x="36" y="22" width="28" height="20" stroke="var(--accent)" stroke-width="2.2"/>
+    <line x1="42" y1="28" x2="58" y2="28" stroke="var(--accent)" stroke-width="1.2" opacity=".7"/>
+    <line x1="42" y1="34" x2="52" y2="34" stroke="var(--accent)" stroke-width="1.2" opacity=".7"/>
+    <g stroke="var(--ink)" stroke-width="1.8">
+      <circle class="ex1" cx="34" cy="20" r="3"/><circle class="ex2" cx="66" cy="20" r="3"/>
+      <circle class="ex3" cx="34" cy="44" r="3"/><circle class="ex4" cx="66" cy="44" r="3"/></g>
+    <g stroke="var(--blue)" stroke-width="1.6" opacity=".8">
+      <line class="ex1" x1="18" y1="52" x2="26" y2="52"/><line class="ex2" x1="74" y1="52" x2="82" y2="52"/></g></svg>`,
+  music:`<svg viewBox="0 0 100 64" fill="none">
+    <g fill="var(--accent)">
+      <rect class="bar" x="20" y="20" width="6" height="32" style="animation-delay:0s"/>
+      <rect class="bar" x="30" y="20" width="6" height="32" style="animation-delay:.15s"/>
+      <rect class="bar" x="40" y="20" width="6" height="32" style="animation-delay:.3s"/>
+      <rect class="bar" x="50" y="20" width="6" height="32" style="animation-delay:.45s"/>
+      <rect class="bar" x="60" y="20" width="6" height="32" style="animation-delay:.6s"/>
+      <rect class="bar" x="70" y="20" width="6" height="32" style="animation-delay:.75s"/></g>
+    <line x1="14" y1="53" x2="86" y2="53" stroke="var(--rule)" stroke-width="1.4"/></svg>`,
+  history:`<svg viewBox="0 0 100 64" fill="none">
+    <g stroke="var(--rule)" stroke-width="1.6">
+      <line x1="12" y1="18" x2="88" y2="18"/><line x1="12" y1="28" x2="88" y2="28"/>
+      <line x1="12" y1="38" x2="88" y2="38"/></g>
+    <line class="strat" x1="12" y1="28" x2="88" y2="28" stroke="var(--blue)" stroke-width="2.4"/>
+    <line x1="12" y1="52" x2="88" y2="52" stroke="var(--ink)" stroke-width="1.6"/>
+    <g stroke="var(--ink)" stroke-width="1.4">
+      <line x1="20" y1="48" x2="20" y2="56"/><line x1="40" y1="48" x2="40" y2="56"/>
+      <line x1="60" y1="48" x2="60" y2="56"/><line x1="80" y1="48" x2="80" y2="56"/></g>
+    <g class="marker"><polygon points="20,44 16,38 24,38" fill="var(--accent)"/></g></svg>`,
+  spark:`<svg viewBox="0 0 100 64" fill="none">
+    <g stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round">
+      <line class="blink" x1="50" y1="16" x2="50" y2="48"/><line class="blink" x1="34" y1="32" x2="66" y2="32" style="animation-delay:.4s"/>
+      <line class="blink" x1="39" y1="21" x2="61" y2="43" style="animation-delay:.8s"/><line class="blink" x1="61" y1="21" x2="39" y2="43" style="animation-delay:1.2s"/></g></svg>`
+};
+
+/* ───────────── canvas plumbing ───────────── */
+let PAL = {};
+function readPalette(){
+  const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim();
+  PAL = { paper:g("--paper"), ink:g("--ink"), muted:g("--muted"), rule:g("--rule"), grid:g("--grid"),
+          accent:g("--accent"), blue:g("--blue"), green:g("--green"), gold:g("--gold"), surface:g("--surface") };
+}
+readPalette();
+let SIMS = [];
+function killSims(){ SIMS.forEach(s=>s.destroy()); SIMS = []; }
+function makeSim(canvas,{ step, draw, resize }){
+  const ctx = canvas.getContext("2d");
+  let W=0,H=0,running=false,last=0,dead=false;
+  function fit(){
+    const dpr = Math.min(devicePixelRatio||1,2), r = canvas.getBoundingClientRect();
+    W = Math.max(320, r.width||800); H = canvas.height;
+    canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr);
+    canvas.style.height = H+"px"; ctx.setTransform(dpr,0,0,dpr,0,0);
+    if(resize) resize(W,H);
+  }
+  function frame(t){
+    if(!running||dead) return;
+    const dt = Math.min(.05,(t-last)/1000||.016); last = t;
+    step(dt,W,H); ctx.clearRect(0,0,W,H); draw(ctx,W,H);
+    requestAnimationFrame(frame);
+  }
+  const onResize = ()=>{ fit(); if(!running) once(); };
+  function start(){ if(running||dead) return; running=true; last=performance.now(); requestAnimationFrame(frame); }
+  function stop(){ running=false; }
+  function once(){ if(dead) return; step(.016,W,H); ctx.clearRect(0,0,W,H); draw(ctx,W,H); }
+  fit(); addEventListener("resize", onResize);
+  const obs = new IntersectionObserver(es=>es.forEach(e=>{
+    if(REDUCED){ once(); return; }
+    e.isIntersecting ? start() : stop();
+  }),{ threshold:.08 });
+  obs.observe(canvas); once();
+  const api = { start, stop, redraw:once,
+    destroy(){ dead=true; running=false; obs.disconnect(); removeEventListener("resize",onResize); } };
+  SIMS.push(api); return api;
+}
+function grid(ctx,W,H,s=26){
+  ctx.save(); ctx.strokeStyle=PAL.grid; ctx.lineWidth=1; ctx.beginPath();
+  for(let x=0;x<W;x+=s){ ctx.moveTo(x+.5,0); ctx.lineTo(x+.5,H); }
+  for(let y=0;y<H;y+=s){ ctx.moveTo(0,y+.5); ctx.lineTo(W,y+.5); }
+  ctx.stroke(); ctx.restore();
+}
+function label(ctx,x,y,t,c,s){
+  ctx.save(); ctx.font=`700 ${s||10}px 'Space Mono', monospace`;
+  ctx.fillStyle=c||PAL.muted; ctx.fillText(t.toUpperCase(),x,y); ctx.restore();
+}
+
+/* ───────────── SIM A · Pure Pursuit + EKF ───────────── */
+function navSim(cv, ui){
+  let Ld=2.4, sigma=.85, pxPerM=20, path=[];
+  let x=0,y=0,th=0; const v=4.2;
+  let obias=.02, ex=0, ey=0, P=1; const Q=.35;
+  let gpsTimer=0, fixes=[], trail=[], estTrail=[], nG=0, sG=0, sE=0, xte=0;
+  function buildPath(w,h){
+    const m=46, r=Math.min(70,(h-2*m)/2), x0=m,x1=w-m,y0=m,y1=h-m, pts=[];
+    const push=(a,b)=>pts.push({x:a,y:b});
+    const arc=(cx,cy,a0,a1)=>{ for(let i=0;i<=26;i++){ const a=a0+(a1-a0)*i/26; push(cx+r*Math.cos(a),cy+r*Math.sin(a)); } };
+    const str=(ax,ay,bx,by)=>{ for(let i=0;i<=40;i++) push(ax+(bx-ax)*i/40, ay+(by-ay)*i/40); };
+    str(x0+r,y0,x1-r,y0); arc(x1-r,y0+r,-Math.PI/2,Math.PI/2);
+    str(x1-r,y1,x0+r,y1); arc(x0+r,y1-r,Math.PI/2,Math.PI*1.5);
+    return pts;
+  }
+  function nearest(px,py){
+    let bi=0,bd=Infinity;
+    for(let i=0;i<path.length;i++){ const dx=path[i].x-px, dy=path[i].y-py, d=dx*dx+dy*dy; if(d<bd){bd=d;bi=i;} }
+    return { i:bi, d:Math.sqrt(bd) };
+  }
+  function resize(w,h){ path=buildPath(w,h); pxPerM=Math.max(14,w/46);
+    if(!trail.length){ x=path[0].x; y=path[0].y; ex=x; ey=y; } }
+  function step(dt){
+    if(!path.length) return;
+    const LdPx=Ld*pxPerM, near=nearest(x,y); xte=near.d/pxPerM;
+    let gi=near.i, acc=0;
+    while(acc<LdPx){ const a=path[gi], b=path[(gi+1)%path.length];
+      acc+=Math.hypot(b.x-a.x,b.y-a.y); gi=(gi+1)%path.length; }
+    const goal=path[gi], alpha=Math.atan2(goal.y-y,goal.x-x)-th;
+    th += v*pxPerM*(2*Math.sin(alpha)/LdPx)*dt;
+    x += v*pxPerM*Math.cos(th)*dt; y += v*pxPerM*Math.sin(th)*dt;
+    obias += (gauss()*.004-obias*.01)*dt*60;
+    ex += v*pxPerM*Math.cos(th+obias)*dt; ey += v*pxPerM*Math.sin(th+obias)*dt; P += Q*dt;
+    gpsTimer += dt;
+    if(gpsTimer>.25){
+      gpsTimer=0;
+      const gx=x+gauss()*sigma*pxPerM, gy=y+gauss()*sigma*pxPerM;
+      fixes.push({x:gx,y:gy,a:1}); if(fixes.length>46) fixes.shift();
+      const K=P/(P+sigma*sigma);
+      ex+=K*(gx-ex); ey+=K*(gy-ey); P*=(1-K);
+      nG++; sG+=(Math.hypot(gx-x,gy-y)/pxPerM)**2; sE+=(Math.hypot(ex-x,ey-y)/pxPerM)**2;
+      if(nG>400){ nG=200; sG/=2; sE/=2; }
+    }
+    fixes.forEach(f=>f.a*=.985);
+    trail.push({x,y}); if(trail.length>150) trail.shift();
+    estTrail.push({x:ex,y:ey}); if(estTrail.length>150) estTrail.shift();
+  }
+  function poly(ctx,pts,c,wd){
+    if(pts.length<2) return;
+    ctx.save(); ctx.strokeStyle=c; ctx.lineWidth=wd; ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.stroke(); ctx.restore();
+  }
+  function draw(ctx,w,h){
+    grid(ctx,w,h);
+    ctx.save(); ctx.strokeStyle=PAL.rule; ctx.lineWidth=1.5; ctx.setLineDash([7,6]);
+    ctx.beginPath(); ctx.moveTo(path[0].x,path[0].y); path.forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.closePath(); ctx.stroke(); ctx.restore();
+    fixes.forEach(f=>{ ctx.save(); ctx.globalAlpha=Math.max(0,f.a)*.8;
+      ctx.strokeStyle=PAL.blue; ctx.lineWidth=1.2; ctx.beginPath();
+      ctx.moveTo(f.x-3,f.y); ctx.lineTo(f.x+3,f.y); ctx.moveTo(f.x,f.y-3); ctx.lineTo(f.x,f.y+3);
+      ctx.stroke(); ctx.restore(); });
+    poly(ctx,trail,PAL.muted,1.2); poly(ctx,estTrail,PAL.accent,2);
+    ctx.save(); ctx.strokeStyle=PAL.accent; ctx.globalAlpha=.3; ctx.setLineDash([3,4]);
+    ctx.beginPath(); ctx.arc(x,y,Ld*pxPerM,0,Math.PI*2); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.translate(x,y); ctx.rotate(th);
+    ctx.fillStyle=PAL.ink; ctx.fillRect(-11,-8,22,16);
+    ctx.fillStyle=PAL.accent; ctx.fillRect(7,-8,4,16);
+    ctx.fillStyle=PAL.muted; [[-9,-11],[5,-11],[-9,7],[5,7]].forEach(([a,b])=>ctx.fillRect(a,b,5,4));
+    ctx.restore();
+    label(ctx,14,22,"— truth",PAL.muted); label(ctx,14,38,"+ raw gps",PAL.blue); label(ctx,14,54,"— ekf estimate",PAL.accent);
+    ui.xte.textContent = xte.toFixed(2)+" m";
+    if(nG>12) ui.red.textContent = "−"+Math.max(0,(1-Math.sqrt(sE/nG)/Math.sqrt(sG/nG))*100).toFixed(1)+"%";
+  }
+  const sim = makeSim(cv,{ step, draw, resize });
+  ui.sLd.addEventListener("input", e=>{ Ld=+e.target.value; ui.vLd.textContent=Ld.toFixed(1); sim.redraw(); });
+  ui.sSig.addEventListener("input", e=>{ sigma=+e.target.value; ui.vSig.textContent=sigma.toFixed(2); nG=sG=sE=0; sim.redraw(); });
+}
+
+/* ───────────── SIM B · quarter-car ───────────── */
+function suspensionSim(root){
+  const cv = root.querySelector(".cv");
+  let pressure=4.2, rough=1, W=0, H=0, scroll=0; const M=260;
+  const carts=[{name:"baseline",k:9500,c:620,z:0,dz:0,rms:0,n:1,sum:0,tuned:false},
+               {name:"tuned",k:0,c:0,z:0,dz:0,rms:0,n:1,sum:0,tuned:true}];
+  const terrain = t => (Math.sin(t*.031)*15+Math.sin(t*.084+1.3)*8+Math.sin(t*.191+2.7)*4.5)*rough;
+  function resize(w,h){ W=w; H=h; }
+  function step(dt){
+    scroll += 78*dt;
+    carts[1].k = 3600+pressure*1450; carts[1].c = 900+pressure*90;
+    carts.forEach((c,i)=>{
+      const xPos = i===0?W*.27:W*.72, defl = c.z-terrain(scroll+xPos);
+      const damp = c.dz>0?c.c*1.35:c.c;
+      let F = -c.k*defl-damp*c.dz;
+      if(defl>26) F -= (defl-26)*26000;
+      if(defl<-26) F -= (defl+26)*26000;
+      const acc = F/M; c.dz += acc*dt; c.z += c.dz*dt;
+      c.sum += acc*acc; c.n++;
+      if(c.n>900){ c.sum*=.5; c.n=Math.round(c.n/2); }
+      c.rms = Math.sqrt(c.sum/c.n);
+    });
+  }
+  function draw(ctx,w,h){
+    grid(ctx,w,h); const base=h-58;
+    ctx.save(); ctx.beginPath(); ctx.moveTo(0,h);
+    for(let px=0;px<=w;px+=3) ctx.lineTo(px,base-terrain(scroll+px));
+    ctx.lineTo(w,h); ctx.closePath(); ctx.fillStyle=PAL.grid; ctx.fill();
+    ctx.strokeStyle=PAL.rule; ctx.lineWidth=1.5; ctx.beginPath();
+    for(let px=0;px<=w;px+=3){ const ty=base-terrain(scroll+px); px?ctx.lineTo(px,ty):ctx.moveTo(px,ty); }
+    ctx.stroke(); ctx.restore();
+    carts.forEach((c,i)=>{
+      const xPos = i===0?w*.27:w*.72;
+      const wheelY = base-terrain(scroll+xPos)-12, bodyY = base-96-c.z*.55;
+      const col = c.tuned?PAL.accent:PAL.muted;
+      ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=c.tuned?2:1.4; ctx.globalAlpha=c.tuned?1:.6;
+      ctx.beginPath(); const span=wheelY-bodyY-8; ctx.moveTo(xPos,bodyY+8);
+      for(let s=1;s<=8;s++) ctx.lineTo(xPos+(s%2?9:-9),bodyY+8+span*s/8);
+      ctx.lineTo(xPos,wheelY); ctx.stroke();
+      ctx.fillStyle=col; ctx.lineWidth=2; ctx.beginPath(); ctx.rect(xPos-42,bodyY-16,84,24);
+      c.tuned?ctx.fill():ctx.stroke();
+      ctx.beginPath(); ctx.arc(xPos,wheelY,12,0,Math.PI*2); ctx.lineWidth=2.4; ctx.stroke(); ctx.restore();
+      label(ctx,xPos-42,bodyY-26,c.name,col);
+    });
+    root.querySelector(".gB").textContent = carts[0].rms.toFixed(2)+" m/s²";
+    const d = (1-carts[1].rms/carts[0].rms)*100;
+    root.querySelector(".gT").textContent = carts[1].rms.toFixed(2)+" m/s²"+
+      (isFinite(d)?`  (${d>0?"−":"+"}${Math.abs(d).toFixed(1)}%)`:"");
+  }
+  const sim = makeSim(cv,{ step, draw, resize });
+  const clr = ()=>carts.forEach(c=>{ c.sum=0; c.n=1; });
+  root.querySelector(".sP").addEventListener("input", e=>{ pressure=+e.target.value; root.querySelector(".vP").textContent=pressure.toFixed(1); clr(); sim.redraw(); });
+  root.querySelector(".sR").addEventListener("input", e=>{ rough=+e.target.value; root.querySelector(".vR").textContent=rough.toFixed(1); clr(); sim.redraw(); });
+}
+
+/* ───────────── SIM C · point cloud ───────────── */
+function cloudSim(root){
+  const cv = root.querySelector(".cv");
+  let cut=.18, yaw=.6, dragging=false, lastX=0, auto=true;
+  const pts=[];
+  (function build(){
+    // Dense ground/reference layer
+    for(let i=0;i<2400;i++){
+      const r=Math.sqrt(Math.random())*1.38, a=Math.random()*Math.PI*2;
+      pts.push({
+        x:Math.cos(a)*r + gauss()*.012,
+        y:Math.max(0,Math.random()*.11 + gauss()*.006),
+        z:Math.sin(a)*r + gauss()*.012
+      });
+    }
+
+    // More canopy centres + substantially more samples for a denser live cloud.
+    const centres=[];
+    for(let b=0;b<14;b++){
+      const ring=.12+Math.random()*.58;
+      const a=Math.random()*Math.PI*2;
+      centres.push({
+        x:Math.cos(a)*ring,
+        y:.30+Math.random()*.86,
+        z:Math.sin(a)*ring
+      });
+    }
+
+    for(let i=0;i<6600;i++){
+      const c=centres[(Math.random()*centres.length)|0];
+      const sy=c.y+gauss()*.16;
+      if(sy<.10) continue;
+
+      // Slightly anisotropic foliage clusters create a fuller canopy silhouette.
+      pts.push({
+        x:c.x+gauss()*(.13+Math.random()*.055),
+        y:sy,
+        z:c.z+gauss()*(.13+Math.random()*.055)
+      });
+    }
+
+    // Central stems / lower woody structure.
+    for(let i=0;i<360;i++){
+      const y=.05+Math.random()*.55;
+      const spread=.016+.020*(y/.55);
+      pts.push({
+        x:gauss()*spread,
+        y,
+        z:gauss()*spread
+      });
+    }
+  })();
+  const maxY = pts.reduce((m,p)=>Math.max(m,p.y),0);
+  function step(dt){ if(auto&&!dragging) yaw += dt*.34; }
+  function draw(ctx,w,h){
+    grid(ctx,w,h);
+    const cx=w/2, cy=h*.82, S=Math.min(h*.62,w*.3);
+    const cosY=Math.cos(yaw), sinY=Math.sin(yaw), tilt=.42;
+    const proj = pts.map(p=>{
+      const rx=p.x*cosY-p.z*sinY, rz=p.x*sinY+p.z*cosY;
+      const depth=rz*Math.cos(tilt)+p.y*Math.sin(tilt), ps=1/(1+depth*.16);
+      return { sx:cx+rx*S*ps, sy:cy-(p.y*Math.cos(tilt)-rz*Math.sin(tilt))*S*ps, d:depth, y:p.y, keep:p.y>cut, ps };
+    }).sort((a,b)=>b.d-a.d);
+    let kept=0,topY=0,spread=0;
+    proj.forEach(p=>{
+      if(p.keep){
+        kept++; topY=Math.max(topY,p.y); spread=Math.max(spread,Math.abs(p.sx-cx));
+        const t=Math.min(1,(p.y-cut)/Math.max(.2,maxY-cut));
+        ctx.fillStyle = t>.62?PAL.accent:(t>.3?PAL.green:PAL.blue);
+        ctx.globalAlpha=.48+p.ps*.38; ctx.fillRect(p.sx,p.sy,1.65,1.65);
+      } else { ctx.fillStyle=PAL.rule; ctx.globalAlpha=.38; ctx.fillRect(p.sx,p.sy,1.25,1.25); }
+    });
+    ctx.globalAlpha=1;
+    const planeY = cy-cut*Math.cos(tilt)*S;
+    ctx.save(); ctx.strokeStyle=PAL.accent; ctx.lineWidth=1.5; ctx.setLineDash([6,5]);
+    ctx.beginPath(); ctx.moveTo(cx-S*1.5,planeY); ctx.lineTo(cx+S*1.5,planeY); ctx.stroke(); ctx.restore();
+    label(ctx,14,22,"canopy retained",PAL.accent); label(ctx,14,38,"ground removed",PAL.rule);
+    const hM=Math.max(0,topY-cut), rM=spread/S;
+    root.querySelector(".gN").textContent = kept.toLocaleString();
+    root.querySelector(".gH").textContent = hM.toFixed(2)+" m";
+    root.querySelector(".gV").textContent = (Math.PI*rM*rM*hM*.62).toFixed(3)+" m³";
+  }
+  const sim = makeSim(cv,{ step, draw, resize:()=>{} });
+  root.querySelector(".sG").addEventListener("input", e=>{ cut=+e.target.value; root.querySelector(".vG").textContent=cut.toFixed(2); sim.redraw(); });
+  const down = e=>{ dragging=true; auto=false; lastX=(e.touches?e.touches[0]:e).clientX; };
+  const move = e=>{ if(!dragging) return; const c=(e.touches?e.touches[0]:e).clientX; yaw+=(c-lastX)*.011; lastX=c; sim.redraw(); };
+  const up = ()=>{ dragging=false; setTimeout(()=>(auto=true),2200); };
+  cv.addEventListener("mousedown",down); cv.addEventListener("touchstart",down,{passive:true});
+  addEventListener("mousemove",move); addEventListener("touchmove",move,{passive:true});
+  addEventListener("mouseup",up); addEventListener("touchend",up);
+}
+
+/* ───────────── SIM D · thesis navigation: manual vs autonomous ───────────── */
+function motionNavSim(root){
+  const cv = root.querySelector(".cv");
+  let W=0,H=0,path=[],mode="auto",speed=.75;
+  let x=0,y=0,th=0,trail=[],xte=0,ready=false;
+  const keys={up:false,down:false,left:false,right:false};
+  const q = sel => root.querySelector(sel);
+
+  function buildPath(w,h){
+    const way=[
+      [.08,.80],[.09,.22],[.24,.11],[.42,.24],
+      [.30,.45],[.43,.68],[.62,.58],[.57,.35],
+      [.73,.16],[.90,.28],[.83,.50],[.92,.73],
+      [.74,.88],[.53,.76],[.34,.89],[.15,.80]
+    ].map(([nx,ny])=>({x:nx*w,y:ny*h}));
+    const pts=[], n=way.length, samples=18;
+    const at=i=>way[(i+n)%n];
+    for(let i=0;i<n;i++){
+      const p0=at(i-1), p1=at(i), p2=at(i+1), p3=at(i+2);
+      for(let j=0;j<samples;j++){
+        const t=j/samples, t2=t*t, t3=t2*t;
+        pts.push({
+          x:.5*((2*p1.x)+(-p0.x+p2.x)*t+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+3*p1.x-3*p2.x+p3.x)*t3),
+          y:.5*((2*p1.y)+(-p0.y+p2.y)*t+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+3*p1.y-3*p2.y+p3.y)*t3)
+        });
+      }
+    }
+    pts.push({...pts[0]});
+    return pts;
+  }
+  function nearest(px,py){
+    let bi=0,bd=Infinity;
+    for(let i=0;i<path.length;i++){
+      const dx=path[i].x-px,dy=path[i].y-py,d=dx*dx+dy*dy;
+      if(d<bd){bd=d;bi=i;}
+    }
+    return {i:bi,d:Math.sqrt(bd)};
+  }
+  function reset(){
+    if(!path.length) return;
+    x=path[0].x; y=path[0].y; th=Math.atan2(path[1].y-path[0].y,path[1].x-path[0].x); trail=[]; xte=0;
+  }
+  function resize(w,h){
+    W=w; H=h; path=buildPath(w,h);
+    if(!ready){ reset(); ready=true; }
+    else { x=Math.min(Math.max(x,20),w-20); y=Math.min(Math.max(y,20),h-20); }
+  }
+  function wrap(a){ while(a>Math.PI)a-=2*Math.PI; while(a<-Math.PI)a+=2*Math.PI; return a; }
+  function step(dt){
+    if(!path.length) return;
+    const near=nearest(x,y); xte=near.d/Math.max(18,W/48);
+    const v=55+speed*55;
+    if(mode==="auto"){
+      const look=Math.max(9,Math.round(12+speed*10));
+      const goal=path[(near.i+look)%path.length];
+      const desired=Math.atan2(goal.y-y,goal.x-x);
+      const err=wrap(desired-th);
+      th += Math.max(-1.35,Math.min(1.35,err*2.4))*dt;
+      x += v*Math.cos(th)*dt; y += v*Math.sin(th)*dt;
+    } else {
+      const turn=(keys.left?1:0)-(keys.right?1:0);
+      const drive=(keys.up?1:0)-(keys.down?1:0);
+      th -= turn*1.85*dt;
+      x += drive*v*Math.cos(th)*dt; y += drive*v*Math.sin(th)*dt;
+    }
+    x=Math.min(Math.max(x,18),W-18); y=Math.min(Math.max(y,18),H-18);
+    trail.push({x,y}); if(trail.length>260) trail.shift();
+  }
+  function drawPlants(ctx,w,h){
+    const ys=[58,58+(h-116)/3,58+2*(h-116)/3,h-58];
+    ctx.save();
+    ys.forEach((yy,row)=>{
+      for(let px=35;px<w-20;px+=30){
+        if(px>45 && px<w-45){
+          ctx.fillStyle=row%2?PAL.green:PAL.muted; ctx.globalAlpha=.24;
+          ctx.beginPath(); ctx.arc(px,yy+(row%2?18:-18),3.2,0,Math.PI*2); ctx.fill();
+        }
+      }
+    });
+    ctx.restore();
+  }
+  function draw(ctx,w,h){
+    grid(ctx,w,h); drawPlants(ctx,w,h);
+    // High-contrast route halo, then an accent dashed reference path.
+    ctx.save();
+    ctx.strokeStyle=PAL.paper; ctx.lineWidth=8; ctx.lineJoin="round"; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(path[0].x,path[0].y); for(let i=1;i<path.length;i++)ctx.lineTo(path[i].x,path[i].y); ctx.stroke();
+    ctx.strokeStyle=PAL.accent; ctx.globalAlpha=.95; ctx.lineWidth=2.8; ctx.setLineDash([11,6]);
+    ctx.beginPath(); ctx.moveTo(path[0].x,path[0].y); for(let i=1;i<path.length;i++)ctx.lineTo(path[i].x,path[i].y); ctx.stroke();
+    ctx.restore();
+
+    // Route markers make the path readable even on a small screen.
+    ctx.save(); ctx.fillStyle=PAL.accent; ctx.strokeStyle=PAL.paper; ctx.lineWidth=2;
+    for(let i=0;i<path.length-1;i+=36){ ctx.beginPath(); ctx.arc(path[i].x,path[i].y,3.6,0,Math.PI*2); ctx.fill(); ctx.stroke(); }
+    ctx.restore();
+
+    if(trail.length>1){ ctx.save(); ctx.strokeStyle=PAL.blue; ctx.globalAlpha=.9; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(trail[0].x,trail[0].y); trail.forEach(p=>ctx.lineTo(p.x,p.y)); ctx.stroke(); ctx.restore(); }
+
+    const near=nearest(x,y), ref=path[near.i];
+    const look=Math.max(9,Math.round(12+speed*10)), goal=path[(near.i+look)%path.length];
+    ctx.save(); ctx.strokeStyle=PAL.accent; ctx.globalAlpha=.48; ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(ref.x,ref.y); ctx.stroke(); ctx.restore();
+    if(mode==="auto"){
+      ctx.save(); ctx.strokeStyle=PAL.gold; ctx.fillStyle=PAL.paper; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(goal.x,goal.y,6,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+    }
+    label(ctx,path[0].x+8,path[0].y-10,"START",PAL.accent,9);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(th);
+    ctx.fillStyle=PAL.ink; ctx.fillRect(-13,-9,26,18);
+    ctx.fillStyle=PAL.accent; ctx.fillRect(8,-9,5,18);
+    ctx.fillStyle=PAL.muted; [[-11,-13],[6,-13],[-11,9],[6,9]].forEach(([a,b])=>ctx.fillRect(a,b,6,4));
+    ctx.restore();
+    label(ctx,14,22,mode==="auto"?"AUTONOMOUS · PATH FOLLOWING":"MANUAL · ARROW KEYS / WASD",mode==="auto"?PAL.accent:PAL.blue);
+    label(ctx,14,40,"RED DASH = REFERENCE · BLUE = ROBOT TRAIL · GOLD = LOOKAHEAD",PAL.muted,9);
+    q(".gMode").textContent=mode==="auto"?"AUTONOMOUS":"MANUAL";
+    q(".gXte").textContent=xte.toFixed(2)+" m";
+  }
+
+  const sim=makeSim(cv,{step,draw,resize});
+  const setMode=m=>{
+    mode=m;
+    q(".navAuto").classList.toggle("is-active",m==="auto");
+    q(".navManual").classList.toggle("is-active",m==="manual");
+    q(".drive-pad").style.opacity=m==="manual"?"1":".35";
+    sim.redraw();
+  };
+  q(".navAuto").addEventListener("click",()=>setMode("auto"));
+  q(".navManual").addEventListener("click",()=>setMode("manual"));
+  q(".navReset").addEventListener("click",()=>{reset();sim.redraw();});
+  q(".sSpeed").addEventListener("input",e=>{speed=+e.target.value;q(".vSpeed").textContent=speed.toFixed(2);});
+
+  const mapKey=(k,on)=>{
+    const key=k.toLowerCase();
+    if(key==="arrowup"||key==="w")keys.up=on;
+    if(key==="arrowdown"||key==="s")keys.down=on;
+    if(key==="arrowleft"||key==="a")keys.left=on;
+    if(key==="arrowright"||key==="d")keys.right=on;
+  };
+  const keyDown=e=>{ if(mode!=="manual")return; if(["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d"].includes(e.key.toLowerCase())){e.preventDefault();mapKey(e.key,true);} };
+  const keyUp=e=>mapKey(e.key,false);
+  addEventListener("keydown",keyDown); addEventListener("keyup",keyUp);
+
+  root.querySelectorAll(".drive-btn").forEach(btn=>{
+    const dir=btn.dataset.dir;
+    const press=e=>{ if(mode!=="manual")return; e.preventDefault(); keys[dir]=true; btn.classList.add("pressed"); };
+    const release=()=>{ keys[dir]=false; btn.classList.remove("pressed"); };
+    btn.addEventListener("pointerdown",press); btn.addEventListener("pointerup",release); btn.addEventListener("pointercancel",release); btn.addEventListener("pointerleave",release);
+  });
+  const baseDestroy=sim.destroy.bind(sim);
+  sim.destroy=()=>{ removeEventListener("keydown",keyDown); removeEventListener("keyup",keyUp); baseDestroy(); };
+  setMode("auto");
+}
+
+/* ───────────── 2D AUTONOMY EXPLORER ───────────── */
+function roboticsLearning(root){
+  const cv=root.querySelector("#autoCanvas"), q=s=>root.querySelector(s);
+
+  const STYLES=[
+    {id:"balanced",name:"Balanced",speed:1.00,gain:1.00,look:1.00,safety:1.00,desc:"A balanced setting between speed, smoothness and responsiveness."},
+    {id:"precise",name:"Precise",speed:.76,gain:1.38,look:.72,safety:1.20,desc:"Slower motion with stronger correction for accurate tracking."},
+    {id:"smooth",name:"Smooth",speed:.88,gain:.78,look:1.48,safety:1.05,desc:"Uses gentler steering and a longer look-ahead for smoother motion."},
+    {id:"fast",name:"Fast",speed:1.34,gain:1.05,look:1.08,safety:.90,desc:"Prioritizes speed while keeping the same autonomy objective."},
+    {id:"cautious",name:"Cautious",speed:.62,gain:1.18,look:.88,safety:1.55,desc:"Moves slowly and reacts earlier to obstacles and uncertainty."},
+    {id:"adaptive",name:"Adaptive",speed:1.00,gain:1.14,look:1.15,safety:1.20,desc:"Changes speed and steering strength as the situation changes."},
+    {id:"short",name:"Short-Horizon",speed:.90,gain:1.28,look:.58,safety:1.05,desc:"Looks only a short distance ahead and reacts quickly to local changes."},
+    {id:"long",name:"Long-Horizon",speed:1.02,gain:.88,look:1.80,safety:1.10,desc:"Looks farther ahead, producing broader and smoother decisions."},
+    {id:"eco",name:"Energy-Saver",speed:.68,gain:.90,look:1.28,safety:1.15,desc:"Uses lower speed and gentler steering to represent energy-aware autonomy."},
+    {id:"robust",name:"Robust",speed:.84,gain:1.46,look:.95,safety:1.35,desc:"Uses stronger correction to represent operation with disturbance or noisy sensing."}
+  ];
+
+  const FAMILIES=[
+    {id:"path",name:"Path Following",sensor:"Path + heading",desc:"Follow a curved reference route from start to finish.",watch:"Compare the red reference path with the blue robot trail."},
+    {id:"waypoint",name:"Waypoint Navigation",sensor:"Position + heading",desc:"Visit a sequence of navigation waypoints in order.",watch:"Watch the active waypoint move as the robot reaches each point."},
+    {id:"avoid",name:"Obstacle Avoidance",sensor:"Range sensing",desc:"Move toward the goal while steering away from nearby obstacles.",watch:"Sensor rays and avoidance arcs become more visible near obstacles."},
+    {id:"tracking",name:"Moving Target Tracking",sensor:"Target position",desc:"Continuously follow a moving target while keeping a useful stand-off distance.",watch:"The green target moves while the robot predicts and follows it."},
+    {id:"patrol",name:"Patrol Route",sensor:"Position + checkpoints",desc:"Repeat a patrol through several inspection checkpoints.",watch:"Checkpoint markers activate one after another."},
+    {id:"coverage",name:"Area Coverage",sensor:"Position + map",desc:"Systematically sweep an area using a back-and-forth coverage pattern.",watch:"The robot paints a structured coverage trail across the workspace."},
+    {id:"perimeter",name:"Perimeter Inspection",sensor:"Boundary distance",desc:"Travel around the edge of a defined inspection region.",watch:"The robot keeps a consistent distance from the boundary."},
+    {id:"dock",name:"Precision Docking",sensor:"Relative dock pose",desc:"Approach a docking station and slow down for final alignment.",watch:"Speed drops during the final docking approach."},
+    {id:"home",name:"Return-to-Home",sensor:"Home position",desc:"Return from a remote operating point to a fixed home position.",watch:"The robot first operates away from home, then autonomously returns."},
+    {id:"corridor",name:"Corridor Navigation",sensor:"Left/right range",desc:"Stay centered while travelling through a constrained corridor.",watch:"Left and right sensor distances are drawn beside the robot."},
+    {id:"search",name:"Search Pattern",sensor:"Position + search map",desc:"Search a region using an expanding autonomous sweep.",watch:"The search route gradually covers more of the workspace."},
+    {id:"adaptive",name:"Adaptive Speed Navigation",sensor:"Path + obstacle + curvature",desc:"Follow a route while automatically changing speed for turns and obstacles.",watch:"The live speed changes according to path curvature and obstacle proximity."}
+  ];
+
+  const MODES=[];
+  FAMILIES.forEach((f,fi)=>{
+    STYLES.forEach((s,si)=>{
+      MODES.push({
+        id:`${f.id}_${s.id}`,
+        family:f,
+        style:s,
+        familyIndex:fi,
+        styleIndex:si,
+        label:`${f.name} · ${s.name}`
+      });
+    });
+  });
+
+  const DEMO_DURATION=40;
+  let W=0,H=0,t=0;
+  let state="idle";
+  let elapsed=0;
+  let mode=MODES[0];
+  let showSensors=true;
+  let showTrail=true;
+
+  // Visitor tuning overrides. These start from the selected mode's style
+  // and can be changed live while the simulation is running.
+  let tuneSpeed=1.0;
+  let tuneGain=1.0;
+  let tuneLook=1.0;
+  let tuneDisturbance=0.0;
+
+  // Error history lets visitors compare tuning choices.
+  let errorSum=0;
+  let errorSamples=0;
+  let errorMax=0;
+
+  let robot={x:0,y:0,th:0,v:0,trail:[],index:0,wp:0,error:0};
+  let target={x:0,y:0};
+  let route=[];
+  let waypoints=[];
+  let obstacles=[];
+  let home={x:0,y:0};
+  let dock={x:0,y:0};
+
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function wrap(a){while(a>Math.PI)a-=Math.PI*2;while(a<-Math.PI)a+=Math.PI*2;return a;}
+
+  // Simulated physical scale: the displayed arena is treated as 12 m wide.
+  // Pixel geometry is converted to meters only for visitor-facing metrics.
+  const ARENA_WIDTH_M=12;
+  function metersPerPixel(){ return ARENA_WIDTH_M/Math.max(1,W); }
+  function pxToMeters(px){ return px*metersPerPixel(); }
+  function speedMetersPerSecond(){ return robot.v*metersPerPixel(); }
+
+  function catmull(points,steps=24,closed=false){
+    const out=[];
+    const n=points.length;
+    const get=i=>{
+      if(closed)return points[(i+n)%n];
+      return points[Math.max(0,Math.min(n-1,i))];
+    };
+    const end=closed?n:n-1;
+
+    for(let i=0;i<end;i++){
+      const p0=get(i-1),p1=get(i),p2=get(i+1),p3=get(i+2);
+      for(let j=0;j<steps;j++){
+        const u=j/steps,u2=u*u,u3=u2*u;
+        out.push({
+          x:.5*((2*p1.x)+(-p0.x+p2.x)*u+(2*p0.x-5*p1.x+4*p2.x-p3.x)*u2+(-p0.x+3*p1.x-3*p2.x+p3.x)*u3),
+          y:.5*((2*p1.y)+(-p0.y+p2.y)*u+(2*p0.y-5*p1.y+4*p2.y-p3.y)*u2+(-p0.y+3*p1.y-3*p2.y+p3.y)*u3)
+        });
+      }
+    }
+    if(!closed)out.push(points[n-1]);
+    return out;
+  }
+
+  function buildScene(){
+    home={x:W*.10,y:H*.83};
+    dock={x:W*.89,y:H*.79};
+
+    const base=[
+      [0.08,0.78],[0.16,0.78],[0.26,0.67],[0.22,0.47],
+      [0.34,0.29],[0.49,0.31],[0.58,0.48],[0.69,0.57],
+      [0.78,0.45],[0.88,0.27],[0.93,0.18]
+    ].map(([x,y])=>({x:x*W,y:y*H}));
+    route=catmull(base,28,false);
+
+    waypoints=[
+      {x:W*.15,y:H*.76},
+      {x:W*.30,y:H*.25},
+      {x:W*.52,y:H*.32},
+      {x:W*.70,y:H*.68},
+      {x:W*.88,y:H*.26}
+    ];
+
+    obstacles=[
+      {x:W*.37,y:H*.46,r:24},
+      {x:W*.61,y:H*.36,r:28},
+      {x:W*.74,y:H*.63,r:24}
+    ];
+  }
+
+  function resetTuningFromMode(){
+    // Normalize each mode's built-in style into visitor-facing tuning values.
+    tuneSpeed=mode.style.speed;
+    tuneGain=mode.style.gain;
+    tuneLook=mode.style.look;
+    tuneDisturbance=0.0;
+    syncTuningControls();
+  }
+
+  function syncTuningControls(){
+    const speed=q("#tuneSpeed");
+    const gain=q("#tuneGain");
+    const look=q("#tuneLook");
+    const disturb=q("#tuneDisturbance");
+    if(speed)speed.value=tuneSpeed;
+    if(gain)gain.value=tuneGain;
+    if(look)look.value=tuneLook;
+    if(disturb)disturb.value=tuneDisturbance;
+  }
+
+  function resetErrorStats(){
+    errorSum=0;
+    errorSamples=0;
+    errorMax=0;
+  }
+
+  function resetRobot(){
+    buildScene();
+    elapsed=0;
+    state="idle";
+    robot={
+      x:W*.09,y:H*.78,th:0,v:0,trail:[],
+      index:0,wp:0,error:0
+    };
+    target={x:W*.75,y:H*.35};
+    resetErrorStats();
+
+    if(mode.family.id==="dock"){
+      robot.x=W*.12;robot.y=H*.24;robot.th=.15;
+    }else if(mode.family.id==="home"){
+      robot.x=W*.80;robot.y=H*.22;robot.th=2.6;
+    }else if(mode.family.id==="corridor"){
+      robot.x=W*.10;robot.y=H*.52;robot.th=0;
+    }
+
+    updateUI();
+  }
+
+  function resize(w,h){
+    W=w;H=h;
+    resetRobot();
+  }
+
+  function steerToward(x,y,gain,dt){
+    const desired=Math.atan2(y-robot.y,x-robot.x);
+    const e=wrap(desired-robot.th);
+    robot.th+=clamp(e*gain,-2.8,2.8)*dt;
+    return Math.abs(e);
+  }
+
+  function advance(speed,dt){
+    robot.v+=(speed-robot.v)*Math.min(1,dt*3.5);
+    robot.x+=Math.cos(robot.th)*robot.v*dt;
+    robot.y+=Math.sin(robot.th)*robot.v*dt;
+    robot.x=clamp(robot.x,13,W-13);
+    robot.y=clamp(robot.y,13,H-13);
+
+    if(showTrail){
+      robot.trail.push({x:robot.x,y:robot.y});
+      if(robot.trail.length>330)robot.trail.shift();
+    }
+  }
+
+  function nearestRouteIndex(){
+    let bi=robot.index,bd=Infinity;
+    const start=Math.max(0,robot.index-4);
+    const stop=Math.min(route.length,robot.index+70);
+    for(let i=start;i<stop;i++){
+      const d=Math.hypot(robot.x-route[i].x,robot.y-route[i].y);
+      if(d<bd){bd=d;bi=i;}
+    }
+    robot.index=Math.max(robot.index,bi);
+    robot.error=bd;
+    return bi;
+  }
+
+  function followRoute(dt,speedMul=1,gainMul=1,lookMul=1){
+    const idx=nearestRouteIndex();
+    const look=Math.round(10*tuneLook*lookMul);
+    const p=route[Math.min(route.length-1,idx+look)];
+    steerToward(p.x,p.y,3.2*tuneGain*gainMul,dt);
+    advance(44*tuneSpeed*speedMul,dt);
+  }
+
+  function obstacleVector(){
+    let rx=0,ry=0,nearest=999;
+    obstacles.forEach(o=>{
+      const dx=robot.x-o.x,dy=robot.y-o.y;
+      const d=Math.max(1,Math.hypot(dx,dy)-o.r);
+      nearest=Math.min(nearest,d);
+      const range=115*mode.style.safety;
+      if(d<range){
+        const w=(range-d)/range;
+        rx+=dx/Math.max(1,Math.hypot(dx,dy))*w;
+        ry+=dy/Math.max(1,Math.hypot(dx,dy))*w;
+      }
+    });
+    return {x:rx,y:ry,nearest};
+  }
+
+  function familyStep(dt){
+    const f=mode.family.id;
+
+    if(f==="path"){
+      followRoute(dt);
+    }
+
+    else if(f==="waypoint"){
+      const p=waypoints[robot.wp%waypoints.length];
+      const err=steerToward(p.x,p.y,3.0*tuneGain,dt);
+      advance(42*tuneSpeed*(1-.25*Math.min(1,err)),dt);
+      if(Math.hypot(robot.x-p.x,robot.y-p.y)<25)robot.wp=(robot.wp+1)%waypoints.length;
+    }
+
+    else if(f==="avoid"){
+      const goal={x:W*.91,y:H*.22};
+      const rep=obstacleVector();
+      const gx=goal.x-robot.x,gy=goal.y-robot.y;
+      const tx=robot.x+gx*.45+rep.x*135*mode.style.safety;
+      const ty=robot.y+gy*.45+rep.y*135*mode.style.safety;
+      steerToward(tx,ty,3.2*tuneGain,dt);
+      const slow=rep.nearest<70?0.55:1;
+      advance(43*tuneSpeed*slow,dt);
+    }
+
+    else if(f==="tracking"){
+      const a=elapsed*.36;
+      target.x=W*.60+Math.cos(a)*W*.22;
+      target.y=H*.48+Math.sin(a*1.35)*H*.20;
+      const dx=target.x-robot.x,dy=target.y-robot.y;
+      const d=Math.max(1,Math.hypot(dx,dy));
+      const stand=62+tuneLook*15;
+      const tx=target.x-dx/d*stand;
+      const ty=target.y-dy/d*stand;
+      steerToward(tx,ty,3.1*tuneGain,dt);
+      advance(45*tuneSpeed*(d<stand*.8?.45:1),dt);
+    }
+
+    else if(f==="patrol"){
+      const patrol=[
+        {x:W*.18,y:H*.22},{x:W*.82,y:H*.22},
+        {x:W*.82,y:H*.75},{x:W*.18,y:H*.75}
+      ];
+      const p=patrol[robot.wp%patrol.length];
+      steerToward(p.x,p.y,3.0*tuneGain,dt);
+      advance(40*tuneSpeed,dt);
+      if(Math.hypot(robot.x-p.x,robot.y-p.y)<25)robot.wp=(robot.wp+1)%patrol.length;
+    }
+
+    else if(f==="coverage"){
+      const rows=7;
+      const pts=[];
+      for(let r=0;r<rows;r++){
+        const y=H*(.16+r*.105);
+        if(r%2===0){
+          pts.push({x:W*.14,y},{x:W*.86,y});
+        }else{
+          pts.push({x:W*.86,y},{x:W*.14,y});
+        }
+      }
+      const p=pts[robot.wp%pts.length];
+      steerToward(p.x,p.y,3.3*tuneGain,dt);
+      advance(36*tuneSpeed,dt);
+      if(Math.hypot(robot.x-p.x,robot.y-p.y)<22)robot.wp=(robot.wp+1)%pts.length;
+    }
+
+    else if(f==="perimeter"){
+      const pad=54*tuneLook;
+      const pts=[
+        {x:pad,y:pad},{x:W-pad,y:pad},
+        {x:W-pad,y:H-pad},{x:pad,y:H-pad}
+      ];
+      const p=pts[robot.wp%4];
+      steerToward(p.x,p.y,3.3*tuneGain,dt);
+      advance(38*tuneSpeed,dt);
+      if(Math.hypot(robot.x-p.x,robot.y-p.y)<24)robot.wp=(robot.wp+1)%4;
+    }
+
+    else if(f==="dock"){
+      const staging={x:dock.x-115,y:dock.y};
+      const dDock=Math.hypot(robot.x-dock.x,robot.y-dock.y);
+      const p=dDock>120?staging:dock;
+      steerToward(p.x,p.y,3.5*tuneGain,dt);
+      const slow=dDock<130?clamp(dDock/130,.20,1):1;
+      advance(38*tuneSpeed*slow,dt);
+      if(dDock<18)robot.v=0;
+    }
+
+    else if(f==="home"){
+      const away={x:W*.78,y:H*.20};
+      const goHome=elapsed>4.0;
+      const p=goHome?home:away;
+      steerToward(p.x,p.y,3.2*tuneGain,dt);
+      const d=Math.hypot(robot.x-p.x,robot.y-p.y);
+      advance(39*tuneSpeed*(d<55?.45:1),dt);
+    }
+
+    else if(f==="corridor"){
+      const centerY=H*.52;
+      const phase=(robot.x/W)*Math.PI*2;
+      const desiredY=centerY+Math.sin(phase*1.5)*28;
+      const targetX=Math.min(W-35,robot.x+90*tuneLook);
+      steerToward(targetX,desiredY,3.1*tuneGain,dt);
+      advance(40*tuneSpeed,dt);
+      if(robot.x>W-38){robot.x=42;robot.y=centerY;robot.trail=[];}
+    }
+
+    else if(f==="search"){
+      const cx=W*.5,cy=H*.5;
+      const a=elapsed*.82;
+      const rad=Math.min(Math.min(W,H)*.36,32+elapsed*9*tuneLook);
+      target.x=cx+Math.cos(a)*rad;
+      target.y=cy+Math.sin(a)*rad;
+      steerToward(target.x,target.y,3.0*tuneGain,dt);
+      advance(37*tuneSpeed,dt);
+    }
+
+    else if(f==="adaptive"){
+      const idx=nearestRouteIndex();
+      const p1=route[Math.min(route.length-1,idx+8)];
+      const p2=route[Math.min(route.length-1,idx+24)];
+      const h1=Math.atan2(p1.y-robot.y,p1.x-robot.x);
+      const h2=Math.atan2(p2.y-p1.y,p2.x-p1.x);
+      const curve=Math.abs(wrap(h2-h1));
+      const rep=obstacleVector();
+      const factor=clamp(1-curve*.9-(rep.nearest<90?.28:0),.38,1.18);
+      const p=route[Math.min(route.length-1,idx+Math.round(12*tuneLook))];
+      steerToward(p.x,p.y,3.3*tuneGain,dt);
+      advance(46*tuneSpeed*factor,dt);
+    }
+  }
+
+  function step(dt){
+    t+=dt;
+    if(state!=="running")return;
+
+    elapsed+=dt;
+    familyStep(dt);
+
+    // Adjustable disturbance: a small lateral motion that makes the effect
+    // of steering gain and look-ahead visible instead of purely numerical.
+    if(tuneDisturbance>0){
+      const nx=-Math.sin(robot.th), ny=Math.cos(robot.th);
+      const wave=Math.sin(elapsed*2.3)+0.55*Math.sin(elapsed*4.7+1.1);
+      const push=tuneDisturbance*7.0*wave*dt;
+      robot.x=clamp(robot.x+nx*push,13,W-13);
+      robot.y=clamp(robot.y+ny*push,13,H-13);
+    }
+
+    // Universal navigation error shown for every autonomy family.
+    // Route modes use cross-track error; goal/target modes use a normalized
+    // target error so tuning changes are still visible.
+    let liveError=0;
+    const f=mode.family.id;
+    if(f==="path"||f==="adaptive"){
+      nearestRouteIndex();
+      liveError=robot.error;
+    }else if(f==="waypoint"){
+      const p=waypoints[robot.wp%waypoints.length];
+      liveError=Math.hypot(robot.x-p.x,robot.y-p.y)*0.18;
+    }else if(f==="tracking"||f==="search"){
+      liveError=Math.abs(Math.hypot(robot.x-target.x,robot.y-target.y)-70)*0.28;
+    }else if(f==="dock"){
+      liveError=Math.hypot(robot.x-dock.x,robot.y-dock.y)*0.12;
+    }else if(f==="home"){
+      const p=elapsed>4?home:{x:W*.78,y:H*.20};
+      liveError=Math.hypot(robot.x-p.x,robot.y-p.y)*0.12;
+    }else if(f==="corridor"){
+      const desiredY=H*.52+Math.sin((robot.x/W)*Math.PI*3)*28;
+      liveError=Math.abs(robot.y-desiredY);
+    }else if(f==="perimeter"){
+      const pad=54*tuneLook;
+      const edge=Math.min(
+        Math.abs(robot.x-pad),Math.abs(robot.x-(W-pad)),
+        Math.abs(robot.y-pad),Math.abs(robot.y-(H-pad))
+      );
+      liveError=edge;
+    }else{
+      liveError=Math.abs(robot.v-(40*tuneSpeed))*0.35;
+    }
+
+    const errorMeters=pxToMeters(liveError);
+    robot.error=errorMeters;
+    errorSum+=errorMeters;
+    errorSamples++;
+    errorMax=Math.max(errorMax,errorMeters);
+
+    if(elapsed>=DEMO_DURATION){
+      elapsed=DEMO_DURATION;
+      state="complete";
+      robot.v=0;
+    }
+
+    updateUI();
+  }
+
+  function drawGrid(ctx){
+    ctx.fillStyle="#edf3f4";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.save();
+    ctx.strokeStyle="rgba(60,85,95,.09)";
+    ctx.lineWidth=1;
+    for(let x=0;x<W;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.restore();
+  }
+
+  function drawRoute(ctx){
+    if(!["path","adaptive"].includes(mode.family.id))return;
+
+    ctx.save();
+    ctx.strokeStyle="rgba(255,255,255,.98)";
+    ctx.lineWidth=11;
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
+    ctx.beginPath();
+    ctx.moveTo(route[0].x,route[0].y);
+    route.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.stroke();
+
+    ctx.strokeStyle=PAL.accent;
+    ctx.lineWidth=2.8;
+    ctx.setLineDash([11,7]);
+    ctx.beginPath();
+    ctx.moveTo(route[0].x,route[0].y);
+    route.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawObstacles(ctx){
+    const f=mode.family.id;
+    if(!["avoid","adaptive","corridor"].includes(f))return;
+
+    if(f==="corridor"){
+      ctx.save();
+      ctx.fillStyle="rgba(89,108,117,.24)";
+      ctx.fillRect(0,H*.25,W,H*.15);
+      ctx.fillRect(0,H*.64,W,H*.15);
+      ctx.strokeStyle="#5a6d76";
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(0,H*.40);ctx.lineTo(W,H*.40);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,H*.64);ctx.lineTo(W,H*.64);ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+    obstacles.forEach((o,i)=>{
+      ctx.save();
+      ctx.fillStyle="#5d6b72";
+      ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle="#34434a";
+      ctx.lineWidth=2;
+      ctx.stroke();
+      ctx.fillStyle="#fff";
+      ctx.font="700 8px 'Space Mono', monospace";
+      ctx.textAlign="center";
+      ctx.fillText(`OBS ${i+1}`,o.x,o.y+3);
+      ctx.restore();
+    });
+  }
+
+  function drawFamilyFeatures(ctx){
+    const f=mode.family.id;
+
+    if(f==="waypoint"){
+      waypoints.forEach((p,i)=>{
+        ctx.save();
+        ctx.strokeStyle=i===robot.wp%waypoints.length?"#efb522":"#87979e";
+        ctx.lineWidth=i===robot.wp%waypoints.length?3:1.5;
+        ctx.beginPath();ctx.arc(p.x,p.y,11,0,Math.PI*2);ctx.stroke();
+        ctx.fillStyle="#41515a";
+        ctx.font="700 8px 'Space Mono', monospace";
+        ctx.textAlign="center";
+        ctx.fillText(`${i+1}`,p.x,p.y+3);
+        ctx.restore();
+      });
+    }
+
+    if(f==="tracking"||f==="search"){
+      ctx.save();
+      ctx.strokeStyle="#47bd76";
+      ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(target.x,target.y,14+Math.sin(t*3)*2,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle="#47bd76";
+      ctx.beginPath();ctx.arc(target.x,target.y,4,0,Math.PI*2);ctx.fill();
+      ctx.font="700 8px 'Space Mono', monospace";
+      ctx.fillText(f==="tracking"?"MOVING TARGET":"SEARCH TARGET",target.x-27,target.y-20);
+      ctx.restore();
+    }
+
+    if(f==="patrol"){
+      const pts=[
+        {x:W*.18,y:H*.22},{x:W*.82,y:H*.22},
+        {x:W*.82,y:H*.75},{x:W*.18,y:H*.75}
+      ];
+      pts.forEach((p,i)=>{
+        ctx.strokeStyle=i===robot.wp%4?"#efb522":"#88979e";
+        ctx.lineWidth=i===robot.wp%4?3:1.5;
+        ctx.beginPath();ctx.arc(p.x,p.y,10,0,Math.PI*2);ctx.stroke();
+      });
+    }
+
+    if(f==="coverage"){
+      ctx.save();
+      ctx.strokeStyle="rgba(64,117,145,.30)";
+      ctx.setLineDash([5,5]);
+      for(let r=0;r<7;r++){
+        const y=H*(.16+r*.105);
+        ctx.beginPath();ctx.moveTo(W*.14,y);ctx.lineTo(W*.86,y);ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    if(f==="perimeter"){
+      const pad=54*tuneLook;
+      ctx.save();
+      ctx.strokeStyle="#6c8795";
+      ctx.lineWidth=2;
+      ctx.setLineDash([8,6]);
+      ctx.strokeRect(pad,pad,W-2*pad,H-2*pad);
+      ctx.restore();
+    }
+
+    if(f==="dock"){
+      ctx.save();
+      ctx.fillStyle="#40515a";
+      ctx.fillRect(dock.x-20,dock.y-16,40,32);
+      ctx.fillStyle="#fff";
+      ctx.font="700 8px 'Space Mono', monospace";
+      ctx.textAlign="center";
+      ctx.fillText("DOCK",dock.x,dock.y+3);
+      ctx.strokeStyle="#47bd76";
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(dock.x,dock.y,31,0,Math.PI*2);ctx.stroke();
+      ctx.restore();
+    }
+
+    if(f==="home"){
+      ctx.save();
+      ctx.fillStyle="#47bd76";
+      ctx.beginPath();ctx.arc(home.x,home.y,12,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle="#2d7047";
+      ctx.font="700 8px 'Space Mono', monospace";
+      ctx.textAlign="center";
+      ctx.fillText("HOME",home.x,home.y+28);
+      ctx.restore();
+    }
+  }
+
+  function drawSensors(ctx){
+    if(!showSensors)return;
+    const f=mode.family.id;
+
+    ctx.save();
+
+    if(["avoid","adaptive"].includes(f)){
+      ctx.strokeStyle="#4ac7ff";
+      ctx.globalAlpha=.40;
+      ctx.lineWidth=1.3;
+      for(let i=-5;i<=5;i++){
+        const a=robot.th+i*.10;
+        const len=95*mode.style.safety*(.70+.30*tuneLook);
+        ctx.beginPath();ctx.moveTo(robot.x,robot.y);
+        ctx.lineTo(robot.x+Math.cos(a)*len,robot.y+Math.sin(a)*len);ctx.stroke();
+      }
+    }
+
+    if(f==="corridor"){
+      ctx.strokeStyle="#4ac7ff";
+      ctx.globalAlpha=.65;
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(robot.x,robot.y);ctx.lineTo(robot.x, H*.40);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(robot.x,robot.y);ctx.lineTo(robot.x, H*.64);ctx.stroke();
+    }
+
+    if(f==="tracking"){
+      ctx.strokeStyle="#47bd76";
+      ctx.globalAlpha=.55;
+      ctx.setLineDash([6,5]);
+      ctx.beginPath();ctx.moveTo(robot.x,robot.y);ctx.lineTo(target.x,target.y);ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawTrail(ctx){
+    if(!showTrail||robot.trail.length<2)return;
+    ctx.save();
+    ctx.strokeStyle=PAL.blue;
+    ctx.lineWidth=2.2;
+    ctx.globalAlpha=.90;
+    ctx.beginPath();
+    ctx.moveTo(robot.trail[0].x,robot.trail[0].y);
+    robot.trail.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawRobot(ctx){
+    ctx.save();
+    ctx.translate(robot.x,robot.y);
+    ctx.rotate(robot.th);
+
+    ctx.shadowBlur=10;
+    ctx.shadowColor=PAL.accent;
+    ctx.fillStyle=PAL.accent;
+    ctx.fillRect(-15,-9,30,18);
+
+    ctx.shadowBlur=0;
+    ctx.fillStyle="#26343c";
+    ctx.fillRect(-11,-13,8,5);
+    ctx.fillRect(4,-13,8,5);
+    ctx.fillRect(-11,8,8,5);
+    ctx.fillRect(4,8,8,5);
+
+    ctx.fillStyle="#e7f8ff";
+    ctx.fillRect(7,-4,6,8);
+
+    ctx.fillStyle="#fff";
+    ctx.beginPath();
+    ctx.moveTo(18,0);
+    ctx.lineTo(10,-5);
+    ctx.lineTo(10,5);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function draw(ctx,w,h){
+    drawGrid(ctx);
+    drawRoute(ctx);
+    drawObstacles(ctx);
+    drawFamilyFeatures(ctx);
+    drawTrail(ctx);
+    drawSensors(ctx);
+    drawRobot(ctx);
+
+    ctx.save();
+    ctx.fillStyle="rgba(31,44,52,.84)";
+    ctx.fillRect(12,12,360,84);
+
+    ctx.font="700 10px 'Space Mono', monospace";
+    ctx.fillStyle="#fff";
+    ctx.fillText(mode.family.name.toUpperCase(),24,31);
+
+    ctx.font="400 9px 'Space Mono', monospace";
+    ctx.fillStyle="#d7e6ec";
+    ctx.fillText(`STYLE: ${mode.style.name.toUpperCase()}`,24,49);
+
+    ctx.fillStyle="#ffd45a";
+    ctx.fillText(`RUN ${elapsed.toFixed(1)} / ${DEMO_DURATION.toFixed(0)} s`,24,66);
+
+    ctx.fillStyle="#91ddaa";
+    ctx.fillText(`SPEED ${speedMetersPerSecond().toFixed(2)} m/s`,165,66);
+
+    ctx.fillStyle="#a9d9ef";
+    ctx.fillText(`HEADING ${(robot.th*180/Math.PI).toFixed(0)}°`,270,66);
+
+    ctx.fillStyle="#dfeaf0";
+    ctx.fillText(`SENSOR: ${mode.family.sensor}`,24,83);
+
+    ctx.restore();
+
+    if(state==="complete"){
+      ctx.save();
+      ctx.fillStyle="rgba(22,33,39,.34)";
+      ctx.fillRect(0,0,w,h);
+      ctx.textAlign="center";
+      ctx.font="700 35px 'Barlow Condensed', sans-serif";
+      ctx.fillStyle="#fff";
+      ctx.fillText("20-SECOND DEMO COMPLETE",w/2,h/2-10);
+      ctx.font="400 10px 'Space Mono', monospace";
+      ctx.fillStyle="#dfeaf0";
+      ctx.fillText("CHOOSE ANOTHER MODE OR PRESS RUN AGAIN",w/2,h/2+18);
+      ctx.restore();
+    }
+  }
+
+  function updateUI(){
+    q("#modeFamily").textContent=mode.family.name;
+    q("#modeStyle").textContent=mode.style.name;
+    q("#modeState").textContent=
+      state==="running"?"Running":
+      state==="complete"?"Complete":
+      state==="paused"?"Paused":"Ready";
+
+    q("#modeTime").textContent=`${elapsed.toFixed(1)} / ${DEMO_DURATION} s`;
+    q("#modeSpeed").textContent=`${speedMetersPerSecond().toFixed(2)} m/s`;
+    q("#modeHeading").textContent=`${(robot.th*180/Math.PI).toFixed(0)}°`;
+    q("#modeError").textContent=`${robot.error.toFixed(2)} m`;
+
+    const avgError=errorSamples?errorSum/errorSamples:0;
+    q("#currentError").textContent=`${robot.error.toFixed(2)} m`;
+    q("#averageError").textContent=`${avgError.toFixed(2)} m`;
+    q("#maximumError").textContent=`${errorMax.toFixed(2)} m`;
+    q("#errorBar").style.width=`${Math.min(100,robot.error/1.20*100)}%`;
+
+    q("#tuneSpeedValue").textContent=`${tuneSpeed.toFixed(2)}×`;
+    q("#tuneGainValue").textContent=tuneGain.toFixed(2);
+    q("#tuneLookValue").textContent=tuneLook.toFixed(2);
+    q("#tuneDisturbanceValue").textContent=tuneDisturbance.toFixed(1);
+
+    q("#modeTitle").textContent=mode.label;
+    q("#modeDescription").textContent=`${mode.family.desc} ${mode.style.desc}`;
+    q("#modeSensor").textContent=mode.family.sensor;
+    q("#modeWatch").textContent=mode.family.watch;
+
+    q("#demoProgress").style.width=`${Math.min(100,elapsed/DEMO_DURATION*100)}%`;
+
+    q("#sensorToggle").classList.toggle("on",showSensors);
+    q("#trailToggle").classList.toggle("on",showTrail);
+  }
+
+  function selectMode(id){
+    mode=MODES.find(m=>m.id===id)||MODES[0];
+    resetTuningFromMode();
+    resetRobot();
+    updateUI();
+    sim.redraw();
+  }
+
+  function runDemo(){
+    if(state==="complete")resetRobot();
+    state="running";
+    updateUI();
+    sim.start();
+  }
+
+  const sim=makeSim(cv,{step,draw,resize});
+
+  // Populate one dropdown with all 120 modes, grouped by autonomy family.
+  const select=q("#autonomyMode");
+  FAMILIES.forEach(f=>{
+    const group=document.createElement("optgroup");
+    group.label=f.name;
+    MODES.filter(m=>m.family.id===f.id).forEach(m=>{
+      const opt=document.createElement("option");
+      opt.value=m.id;
+      opt.textContent=m.label;
+      group.appendChild(opt);
+    });
+    select.appendChild(group);
+  });
+  select.value=mode.id;
+
+  select.addEventListener("change",()=>selectMode(select.value));
+
+  q("#runDemo").addEventListener("click",runDemo);
+
+  q("#pauseDemo").addEventListener("click",()=>{
+    if(state==="running"){
+      state="paused";
+      robot.v=0;
+      updateUI();
+      sim.redraw();
+    }
+  });
+
+  q("#resetDemo").addEventListener("click",()=>{
+    resetRobot();
+    sim.redraw();
+  });
+
+  q("#sensorToggle").addEventListener("click",()=>{
+    showSensors=!showSensors;
+    updateUI();
+    sim.redraw();
+  });
+
+  q("#trailToggle").addEventListener("click",()=>{
+    showTrail=!showTrail;
+    if(!showTrail)robot.trail=[];
+    updateUI();
+    sim.redraw();
+  });
+
+  q("#tuneSpeed").addEventListener("input",e=>{
+    tuneSpeed=+e.target.value;
+    updateUI();
+  });
+
+  q("#tuneGain").addEventListener("input",e=>{
+    tuneGain=+e.target.value;
+    updateUI();
+  });
+
+  q("#tuneLook").addEventListener("input",e=>{
+    tuneLook=+e.target.value;
+    updateUI();
+  });
+
+  q("#tuneDisturbance").addEventListener("input",e=>{
+    tuneDisturbance=+e.target.value;
+    updateUI();
+  });
+
+  q("#resetTuning").addEventListener("click",()=>{
+    resetTuningFromMode();
+    resetErrorStats();
+    robot.error=0;
+    updateUI();
+    sim.redraw();
+  });
+
+  resetTuningFromMode();
+  resetRobot();
+  updateUI();
+  sim.start();
+}
+/* ───────────── fragments ───────────── */
+const dimHead = (t,qty) =>
+  `<div class="dim"><span class="cap"></span><span class="ln short"></span><h2>${esc(t)}</h2><span class="ln"></span>${qty?`<span class="qty">${esc(qty)}</span>`:""}<span class="cap"></span></div>`;
+const pager = (label,href,title) =>
+  `<div class="wrap"><div class="pager"><a href="${href}"><span><small>${esc(label)}</small>${esc(title)}</span> <span style="color:var(--accent)">→</span></a></div></div>`;
+const PLAY_ICON = `<svg viewBox="0 0 12 14" fill="currentColor"><path d="M0 0v14l12-7z"/></svg>`;
+const hasVideo = v => !v?false:(v.type==="youtube"||v.type==="vimeo")?!!v.id:!!v.src;
+function mediaHTML(p,i){
+  const v=p.video;
+  if(!hasVideo(v)) return `<div class="media no-video"><p>Footage in<br>preparation</p></div>`;
+  if(v.type==="gif") return `<div class="media gif-media">
+    <img src="${esc(v.src)}" alt="${esc(p.title)} animation" loading="lazy">
+    <div class="gif-label">${esc(v.label||"Animated demo")}</div>
+  </div>`;
+  if(v.type==="loop") return `<div class="media"><video src="${esc(v.src)}" autoplay muted loop playsinline ${v.poster?`poster="${esc(v.poster)}"`:""}></video></div>`;
+  const poster = v.poster || (v.type==="youtube"?`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`:"");
+  return `<div class="media" data-i="${i}">
+    ${poster?`<img src="${esc(poster)}" alt="" loading="lazy" onerror="this.remove()">`:""}
+    <button type="button" class="media-btn" aria-label="Play video: ${esc(p.title)}">
+      <span class="play"><span>${PLAY_ICON}</span>${esc(v.label||"Play")}</span></button></div>`;
+}
+function playerHTML(v,title){
+  if(v.type==="youtube") return `<iframe src="https://www.youtube-nocookie.com/embed/${esc(v.id)}?autoplay=1&rel=0" title="${esc(title)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  if(v.type==="vimeo") return `<iframe src="https://player.vimeo.com/video/${esc(v.id)}?autoplay=1" title="${esc(title)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  return `<video src="${esc(v.src)}" controls autoplay playsinline ${v.poster?`poster="${esc(v.poster)}"`:""}></video>`;
+}
+const SUSP_TPL = `<figure class="sim">
+  <div class="sim-bar"><span class="live"><i></i>Live</span><span>Nonlinear quarter-car · air-spring suspension</span><span class="hint">Two carts, same terrain — one tuned, one baseline</span></div>
+  <canvas class="cv" height="280"></canvas>
+  <div class="sim-foot">
+    <div class="knob"><label>Air-spring pressure <b><span class="vP">4.2</span> bar</b></label><input type="range" class="sP" min="1.5" max="8" step="0.1" value="4.2"></div>
+    <div class="knob"><label>Terrain roughness <b><span class="vR">1.0</span>×</b></label><input type="range" class="sR" min="0.2" max="2.4" step="0.1" value="1.0"></div>
+    <div class="gauge"><span>RMS accel · baseline</span><b class="calm gB">—</b></div>
+    <div class="gauge"><span>RMS accel · tuned</span><b class="gT">—</b></div>
+  </div><div class="sim-note">Illustrative browser animation; project metrics above are the validated research results.</div></figure>`;
+const CLOUD_TPL = `<figure class="sim">
+  <div class="sim-bar"><span class="live"><i></i>Live</span><span>Ground-plane separation on a reconstructed canopy</span><span class="hint">Drag to rotate · slide to cut the ground away</span></div>
+  <canvas class="cv" height="330"></canvas>
+  <div class="sim-foot">
+    <div class="knob"><label>Ground cutoff <b><span class="vG">0.18</span> m</b></label><input type="range" class="sG" min="0" max="0.75" step="0.01" value="0.18"></div>
+    <div class="gauge"><span>Points retained</span><b class="calm gN">—</b></div>
+    <div class="gauge"><span>Plant height</span><b class="gH">—</b></div>
+    <div class="gauge"><span>Canopy volume</span><b class="gV">—</b></div>
+  </div><div class="sim-note">Illustrative browser animation of canopy separation and geometry; the validated thesis metrics are listed in the project summary above.</div></figure>`;
+const NAV_TPL = `<figure class="sim">
+  <div class="sim-bar"><span class="live"><i></i>Interactive concept</span><span>MS research · four-wheel control & navigation</span><span class="hint">Switch modes · use arrow keys/WASD or the on-screen pad in manual mode</span></div>
+  <canvas class="cv" height="400" aria-label="Interactive manual and autonomous agricultural robot navigation demonstration"></canvas>
+  <div class="sim-foot">
+    <div class="btnrow"><button class="gbtn navAuto is-active">Autonomous</button><button class="gbtn ghost navManual">Manual</button><button class="gbtn ghost navReset">Reset</button></div>
+    <div class="drive-pad" aria-label="Manual drive controls"><button class="drive-btn up" data-dir="up">↑</button><button class="drive-btn left" data-dir="left">←</button><button class="drive-btn down" data-dir="down">↓</button><button class="drive-btn right" data-dir="right">→</button></div>
+    <div class="knob"><label>Drive speed <b><span class="vSpeed">0.75</span>×</b></label><input type="range" class="sSpeed" min="0.30" max="1.20" step="0.05" value="0.75"></div>
+    <div class="gauge"><span>Control mode</span><b class="calm gMode">AUTONOMOUS</b></div>
+    <div class="gauge"><span>Cross-track distance</span><b class="gXte">0.00 m</b></div>
+  </div>
+  <div class="sim-note">Illustrative browser animation of the control/navigation concept. The validated M.S. research results are the values listed above; this canvas is not a replay of the experiment.</div>
+</figure>`;
+const timelineHTML = list => `<div class="tl">${list.map(e=>`
+  <div class="tlx reveal${e.hot?" hot":""}">
+    <p class="when"><b>${esc(e.tag)}</b><span>${esc(e.when)}</span></p>
+    <h3>${esc(e.title)}</h3>
+    <p class="org">${esc(e.org)} <i>· ${esc(e.place)}</i></p>
+    <ul>${e.bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
+  </div>`).join("")}</div>`;
+const CITEABLE = ["Published","In press","Thesis"];
+const badgeClass = s => s==="Published"?"pub":(CITEABLE.includes(s)?"live":"");
+function bibtex(p){
+  const surname = p.authors.split(",")[0].trim().split(/\s+/).pop().toLowerCase();
+  const word = p.title.toLowerCase().replace(/[^a-z\s]/g,"").split(/\s+/)
+    .find(w=>w.length>4&&!["under","which","their","these","about","using","design"].includes(w))||"work";
+  const key = `${surname}${p.year}${word}`;
+  const authors = p.authors.split(",").map(a=>a.trim()).join(" and ");
+  if(p.type==="thesis")
+    return `@mastersthesis{${key},\n  title  = {${p.title}},\n  author = {${authors}},\n  school = {${p.school}},\n  year   = {${p.year}}\n}`;
+  const extra = [`  journal = {${p.venue}}`, p.doi?`  doi     = {${p.doi}}`:null,
+    p.status==="In press"?`  note    = {In press}`:null].filter(Boolean).join(",\n");
+  return `@article{${key},\n  title   = {${p.title}},\n  author  = {${authors}},\n${extra},\n  year    = {${p.year}}\n}`;
+}
+
+/* ───────────── PAGES ───────────── */
+const PAGES = {
+
+  "/": () => `
+    <div class="wrap pagehead hero">
+      <h1><span><i>${esc(SITE.name)}</i></span><span><i>${esc(SITE.surname)}</i></span></h1>
+      <div class="role">${SITE.role.map(([k,v])=>`<div><b>${esc(k)}</b>${esc(v)}</div>`).join("")}</div>
+      <p class="sub" style="margin-top:26px">${SITE.lede}</p>
+      <div class="meta-row">${SITE.links.map(l=>`<a href="${esc(l.href)}">${esc(l.label)}</a>`).join("")}</div>
+    </div>
+    <div class="ticker"><div class="ticker-track">${[...SITE.ticker,...SITE.ticker].map(t=>`<span>${esc(t)}</span>`).join("")}</div></div>
+    <section>
+      <div class="wrap">
+        ${dimHead("Research focus", pad2(FOCUS.length)+" areas")}
+        <p class="note">${esc(COPY.homeFocus)}</p>
+        <div class="focus">${FOCUS.map((f,i)=>`
+          <div class="foc reveal"><span class="n">${pad2(i+1)}</span>${GLYPH[f.glyph]||""}
+            <h3>${esc(f.title)}</h3><p>${esc(f.text)}</p></div>`).join("")}</div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Autonomous systems explorer","120 modes")}
+        <p class="note">Choose an autonomous behavior, tune the robot while it runs, and compare how speed, steering response, look-ahead, and disturbance change the actual trajectory and navigation error.</p>
+
+        <figure class="sim autoexp home-stack reveal" id="logicLab">
+          <div class="sim-bar">
+            <span class="live"><i></i>Interactive autonomy</span>
+            <span>2D robot behavior explorer</span>
+            <span class="hint">120 modes · tune live · 40-second demo</span>
+          </div>
+
+          <div class="autoexp-selectbox">
+            <label>
+              <span>Select autonomous robot mode</span>
+              <b>12 families × 10 styles</b>
+            </label>
+            <select class="autoexp-select" id="autonomyMode" aria-label="Choose autonomous robot behavior"></select>
+          </div>
+
+          <div class="autoexp-tuning">
+            <div class="autoexp-tuning-head">
+              <div>
+                <span>Tune while it runs</span>
+                <b>Change a slider and compare the blue trail + error</b>
+              </div>
+              <button class="gbtn ghost" id="resetTuning">Reset Tuning</button>
+            </div>
+
+            <div class="autoexp-tuning-grid">
+              <div class="autoexp-tune">
+                <label>Speed <b id="tuneSpeedValue">1.00×</b></label>
+                <input id="tuneSpeed" type="range" min="0.45" max="1.65" step="0.05" value="1.00">
+              </div>
+
+              <div class="autoexp-tune">
+                <label>Steering response <b id="tuneGainValue">1.00</b></label>
+                <input id="tuneGain" type="range" min="0.45" max="2.00" step="0.05" value="1.00">
+              </div>
+
+              <div class="autoexp-tune">
+                <label>Look-ahead <b id="tuneLookValue">1.00</b></label>
+                <input id="tuneLook" type="range" min="0.45" max="2.00" step="0.05" value="1.00">
+              </div>
+
+              <div class="autoexp-tune">
+                <label>Disturbance <b id="tuneDisturbanceValue">0.0</b></label>
+                <input id="tuneDisturbance" type="range" min="0" max="2.0" step="0.1" value="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="autoexp-hud home-primary-hud">
+            <div><span>Family</span><b id="modeFamily">Path Following</b></div>
+            <div><span>Style</span><b id="modeStyle">Balanced</b></div>
+            <div><span>Status</span><b id="modeState">Ready</b></div>
+            <div><span>Demo time</span><b id="modeTime">0.0 / 40 s</b></div>
+            <div><span>Speed</span><b id="modeSpeed">0.00 m/s</b></div>
+            <div><span>Heading</span><b id="modeHeading">0°</b></div>
+            <div><span>Current error</span><b id="modeError">0.00 m</b></div>
+          </div>
+
+          <div class="autoexp-hud home-error-hud" style="border-top:0">
+            <div>
+              <span>Current error</span>
+              <b id="currentError">0.00 m</b>
+              <div class="autoexp-errorbar"><i id="errorBar"></i></div>
+            </div>
+            <div><span>Average error</span><b id="averageError">0.00 m</b></div>
+            <div><span>Maximum error</span><b id="maximumError">0.00 m</b></div>
+          </div>
+
+          <canvas id="autoCanvas" height="390" aria-label="Interactive 2D autonomous systems demonstration"></canvas>
+
+          <div class="autoexp-progress"><i id="demoProgress"></i></div>
+
+          <div class="autoexp-actions">
+            <div class="btnrow">
+              <button class="gbtn" id="runDemo">Run Demo</button>
+              <button class="gbtn ghost" id="pauseDemo">Pause</button>
+              <button class="gbtn ghost" id="resetDemo">Reset</button>
+              <button class="gbtn ghost on" id="sensorToggle">Sensors</button>
+              <button class="gbtn ghost on" id="trailToggle">Trail</button>
+            </div>
+          </div>
+
+          <div class="autoexp-status">
+            <b>Try:</b> increase Disturbance and Speed, lower Steering Response, then raise Steering Response and compare the error. Error is shown in simulated meters using a 12 m-wide arena scale.
+          </div>
+
+          <div class="autoexp-info">
+            <div>
+              <span class="k">Selected behavior</span>
+              <b id="modeTitle">Path Following · Balanced</b>
+              <p id="modeDescription"></p>
+            </div>
+
+            <div>
+              <span class="k">Information used</span>
+              <b id="modeSensor">Path + heading</b>
+              <p>The visualization changes automatically for paths, targets, waypoints, range sensing, boundaries, search patterns, and docking.</p>
+            </div>
+
+            <div>
+              <span class="k">What to watch</span>
+              <b>Compare behavior and error</b>
+              <p id="modeWatch"></p>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+    ${pager("Next","#/about","About me")}`,
+
+  "/about": () => `
+    <div class="wrap pagehead">
+      <h1><span><i>About</i></span><span><i>Me</i></span></h1>
+    </div>
+    <section style="padding-top:46px">
+      <div class="wrap">
+        <div class="bio">
+          <div class="reveal">
+            <div class="portrait">
+              <img src="${esc(ABOUT.portrait)}" alt="Portrait of ${esc(FULLNAME)}"
+                   onerror="this.closest('.portrait').classList.add('empty'); this.remove();">
+              <div class="ph">media/portrait.jpg<br>4:5 portrait</div>
+            </div>
+            <div class="portrait-cap">
+              <span>${esc(ABOUT.capLeft)}</span>
+              <span>${esc(ABOUT.capRight)}</span>
+            </div>
+          </div>
+
+          <div class="bio-text reveal">
+            ${ABOUT.paragraphs.map(p=>`<p>${p}</p>`).join("")}
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Education", pad2(EDUCATION.length)+" degrees")}
+        ${timelineHTML(EDUCATION)}
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Professional experience", pad2(EXPERIENCE.length)+" roles")}
+        ${timelineHTML(EXPERIENCE)}
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Awards", pad2(AWARDS.length)+" highlights")}
+        ${AWARDS.map(a=>`<div class="award reveal">
+          <div class="stat"><b class="live">${a.year}</b></div>
+          <div><h3>${esc(a.title)}</h3><p>${esc(a.where)}</p></div>
+        </div>`).join("")}
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Leadership", pad2(LEADERSHIP.length)+" role")}
+        ${LEADERSHIP.map(a=>`<div class="award reveal">
+          <div class="stat"><b class="live">${esc(a.year)}</b></div>
+          <div><h3>${esc(a.title)}</h3><p>${esc(a.where)}</p><p style="margin-top:6px">${esc(a.blurb)}</p></div>
+        </div>`).join("")}
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Research trajectory","From physical systems to intelligent, coordinated autonomy")}
+        <div class="focus">${HOBBIES.map((h,i)=>`
+          <div class="foc reveal"><span class="n">${pad2(i+1)}</span>${GLYPH[h.glyph]||""}
+            <h3>${esc(h.title)}</h3><p>${esc(h.text)}</p></div>`).join("")}</div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Toolkit")}
+        <div class="kit">${TOOLKIT.map(k=>`<div class="reveal"><h3>${esc(k.group)}</h3><p>${esc(k.items)}</p></div>`).join("")}</div>
+      </div>
+    </section>
+    ${pager("Next","#/projects","Selected projects")}`,
+
+  "/projects": () => `
+    <div class="wrap pagehead">
+      <h1><span><i>Selected</i></span><span><i>Projects</i></span></h1>
+      <p class="sub">${esc(COPY.projects)}</p>
+    </div>
+    <section style="padding-top:44px">
+      <div class="wrap">
+        ${PROJECTS.map((p,i)=>{
+          const tags=(p.tags||[]).map(t=>`<em>${esc(t)}</em>`).join("");
+          const spec=(p.spec||[]).map(([l,v])=>`<div><span class="lbl">${esc(l)}</span><span class="fill"></span><span class="val" data-count>${esc(v)}</span></div>`).join("");
+          return `<article class="project reveal${p.media===false?" no-media":""}" data-i="${i}">
+            <div>
+              <p class="p-idx">${pad2(i+1)} / ${pad2(PROJECTS.length)}</p>
+              <p class="p-head"><span class="st">${esc(p.status)}</span> · ${esc(p.year)}</p>
+              <h3>${esc(p.title)}</h3>
+              <p class="body">${esc(p.blurb)}</p>
+              ${spec?`<div class="spec">${spec}</div>`:""}
+              <p class="roles"><b>${esc(p.role||"")}</b>${p.collaborators?"<br>"+esc(p.collaborators):""}</p>
+              ${tags?`<div class="tagline">${tags}</div>`:""}
+            </div>
+            ${p.media===false?"":mediaHTML(p,i)}
+            ${p.sim?`<div class="sim-slot" data-sim="${esc(p.sim)}"></div>`:""}
+          </article>`;
+        }).join("")}
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        ${dimHead("Industry design", pad2(INDUSTRY.length)+" products")}
+        <p class="note">${esc(COPY.industry)}</p>
+        <div class="grid">${INDUSTRY.map(p=>`<div class="card reveal">
+          <h3>${esc(p.name)}</h3><p>${esc(p.blurb)}</p><span class="src">${esc(p.src)}</span></div>`).join("")}</div>
+      </div>
+    </section>
+    ${pager("Next","#/papers","Papers & theses")}`,
+
+  "/papers": () => {
+    const out = PAPERS.filter(p=>p.status==="Published"||p.status==="In press").length;
+    const prep = PAPERS.filter(p=>p.status==="In preparation").length;
+    return `
+    <div class="wrap pagehead">
+      <h1><span><i>Papers</i></span><span><i>&amp; Theses</i></span></h1>
+      <p class="sub">${esc(COPY.papers)}</p>
+    </div>
+    <section style="padding-top:44px">
+      <div class="wrap">
+        ${dimHead("Publications", `${out} out · ${prep} in preparation`)}
+        ${PAPERS.map((p,i)=>{
+          const authors = p.authors.replace(FULLNAME, `<span class="me">${esc(FULLNAME)}</span>`);
+          const links = Object.entries(p.links||{}).map(([k,u])=>`<a href="${esc(u)}">${esc(k)}</a>`).join("");
+          return `<article class="paper reveal" data-p="${i}">
+            <div class="stat"><b class="${badgeClass(p.status)}">${esc(p.status)}</b><span class="yr">${p.year}</span></div>
+            <div>
+              <h3>${esc(p.title)}</h3>
+              <p class="authors">${authors}</p>
+              <p class="where">${esc(p.venueLong||p.venue)}</p>
+              ${p.note?`<p class="pnote">${esc(p.note)}</p>`:""}
+              ${links.trim()?`<div class="actions">${links}</div>`:""}
+            </div></article>`;
+        }).join("")}
+      </div>
+    </section>
+    ${pager("Next","#/contact","Contact")}`;
+  },
+
+
+  "/contact": () => `
+    <div class="wrap pagehead">
+      <h1><span><i>Contact</i></span><span><i>Me</i></span></h1>
+      <p class="sub">For research collaboration, academic discussion, or professional inquiries.</p>
+    </div>
+
+    <section style="padding-top:44px">
+      <div class="wrap">
+        <div class="contact-grid">
+          <div class="contact-card reveal">
+            <h2>Send a message</h2>
+            <p>Send a message directly from this website. No email application is required.</p>
+
+            <form class="contact-form" id="contactForm">
+              <input type="hidden" name="access_key" value="f29cb1f8-6539-46b0-92dc-420086374104">
+              <input type="hidden" name="from_name" value="Mesbahul Maruf Portfolio">
+              <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+              <div class="contact-field">
+                <label for="contactName">Your name</label>
+                <input id="contactName" name="name" type="text" autocomplete="name" required>
+              </div>
+
+              <div class="contact-field">
+                <label for="contactEmail">Your email</label>
+                <input id="contactEmail" name="email" type="email" autocomplete="email" required>
+              </div>
+
+              <div class="contact-field">
+                <label for="contactSubject">Subject</label>
+                <input id="contactSubject" name="subject" type="text" required>
+              </div>
+
+              <div class="contact-field">
+                <label for="contactMessage">Message</label>
+                <textarea id="contactMessage" name="message" required></textarea>
+              </div>
+
+              <div class="contact-actions">
+                <button class="gbtn" type="submit">Send Message</button>
+                <button class="gbtn ghost" type="reset">Clear</button>
+              </div>
+
+              <div class="contact-status" id="contactStatus">
+                Your message will be submitted directly from this website.
+              </div>
+            </form>
+          </div>
+
+          <div class="contact-side">
+            <div class="contact-mini reveal">
+              <span>Email</span>
+              <b><a href="mailto:mzm0411@auburn.edu">mzm0411@auburn.edu</a></b>
+              <p>Research, collaboration, and professional communication.</p>
+            </div>
+
+            <div class="contact-mini reveal">
+              <span>LinkedIn</span>
+              <b><a href="https://www.linkedin.com/in/mesbah-maruf/" target="_blank" rel="noopener">Md Mesbahul Maruf</a></b>
+              <p>Professional profile and networking.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    ${pager("Back to","#/papers","Papers & theses")}`,
+
+
+
+};
+
+/* ───────────── reveal + count-up ───────────── */
+let io;
+function observeReveals(){
+  if(io) io.disconnect();
+  io = new IntersectionObserver(entries=>entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    en.target.classList.add("in");
+    en.target.querySelectorAll?.("[data-count]").forEach(c=>{ if(!REDUCED) countUp(c); });
+    io.unobserve(en.target);
+  }),{ rootMargin:"0px 0px -8% 0px", threshold:.05 });
+  $$(".reveal, .dim, .tl").forEach((el,i)=>{
+    el.style.transitionDelay = `${Math.min(i,6)*60}ms`; io.observe(el);
+  });
+}
+function countUp(el){
+  const raw = el.textContent, m = raw.match(/-?−?\d+(\.\d+)?/g);
+  if(!m||m.length!==1) return;
+  const target = parseFloat(m[0].replace("−","-")), dec = (m[0].split(".")[1]||"").length;
+  const t0 = performance.now();
+  const tick = now => {
+    const k=Math.min(1,(now-t0)/950), e=1-Math.pow(1-k,3);
+    el.textContent = raw.replace(m[0],(target<0?"−":"")+Math.abs(target*e).toFixed(dec));
+    if(k<1) requestAnimationFrame(tick); else el.textContent = raw;
+  };
+  requestAnimationFrame(tick);
+}
+
+/* ───────────── router ───────────── */
+const view = $("#view"), navEl = $("#nav"), navInk = $("#navInk");
+function moveInk(){
+  const a = navEl.querySelector("a.on");
+  if(!a || innerWidth<=900){ navInk.style.width="0"; return; }
+  navInk.style.width = a.offsetWidth+"px";
+  navInk.style.transform = `translateX(${a.offsetLeft}px)`;
+}
+function markNav(path){
+  $$("#nav a").forEach(a=>a.classList.toggle("on", a.getAttribute("href")==="#"+path));
+  requestAnimationFrame(moveInk);
+}
+function onProjectClick(e){
+  const btn = e.target.closest(".media-btn"); if(!btn) return;
+  const well = btn.closest(".media"), p = PROJECTS[+well.dataset.i];
+  well.innerHTML = playerHTML(p.video, p.title);
+}
+function onPaperClick(e){
+  const t = e.target.closest(".dt");
+  if(t){
+    const art=t.closest(".paper"), kind=t.dataset.kind;
+    const drawer=art.querySelector(`.drawer[data-kind="${kind}"]`);
+    const open=t.getAttribute("aria-expanded")==="true";
+    t.setAttribute("aria-expanded",String(!open));
+    t.textContent = open?(kind==="abs"?"Abstract":"Cite"):"Hide";
+    drawer.classList.toggle("is-open",!open);
+    return;
+  }
+  const c = e.target.closest(".copy-btn");
+  if(c) navigator.clipboard?.writeText(c.nextElementSibling.textContent)
+    .then(()=>{ c.textContent="Copied"; setTimeout(()=>(c.textContent="Copy"),1600); })
+    .catch(()=>(c.textContent="Select manually"));
+}
+function pageInit(path){
+  if(path==="/"){
+    const f=$("#logicLab");
+    if(f) roboticsLearning(f);
+  }
+
+  if(path==="/contact"){
+    const form=$("#contactForm");
+    if(form){
+      form.addEventListener("submit",async e=>{
+        e.preventDefault();
+
+        const status=$("#contactStatus");
+        const submitBtn=form.querySelector('button[type="submit"]');
+
+        if(!form.reportValidity()) return;
+
+        submitBtn.disabled=true;
+        status.textContent="Sending message…";
+
+        try{
+          const formData=new FormData(form);
+          const object=Object.fromEntries(formData);
+
+          const response=await fetch("https://api.web3forms.com/submit",{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json",
+              "Accept":"application/json"
+            },
+            body:JSON.stringify(object)
+          });
+
+          const data=await response.json();
+
+          if(response.ok && data.success){
+            form.reset();
+            status.textContent="Message sent successfully. Thank you.";
+          }else{
+            status.textContent=data.message || "Message could not be sent. Please try again.";
+          }
+        }catch(err){
+          status.textContent="Message could not be sent. Please try again.";
+        }finally{
+          submitBtn.disabled=false;
+        }
+      });
+    }
+  }
+  if(path==="/projects"){
+    $$(".sim-slot").forEach(slot=>{
+      const kind=slot.dataset.sim;
+      if(kind==="suspension") { slot.innerHTML=SUSP_TPL; suspensionSim(slot.querySelector(".sim")); }
+      else if(kind==="navigation") { slot.innerHTML=NAV_TPL; motionNavSim(slot.querySelector(".sim")); }
+      else if(kind==="cloud") { slot.innerHTML=CLOUD_TPL; cloudSim(slot.querySelector(".sim")); }
+    });
+    view.addEventListener("click", onProjectClick);
+  }
+  if(path==="/papers") view.addEventListener("click", onPaperClick);
+}
+let current = null;
+function render(){
+  let path = location.hash.replace(/^#/,"") || "/";
+  if(!PAGES[path]) path = "/";
+  if(path===current) return;
+  const first = current===null;
+  current = path;
+  const swap = () => {
+    view.removeEventListener("click", onProjectClick);
+    view.removeEventListener("click", onPaperClick);
+    killSims();
+    view.innerHTML = PAGES[path]();
+    view.classList.remove("leaving");
+    if(!first) scrollTo({ top:0, behavior:"instant" });
+    markNav(path); pageInit(path); observeReveals();
+    navEl.classList.remove("open");
+  };
+  if(first||REDUCED) swap();
+  else { view.classList.add("leaving"); setTimeout(swap,230); }
+}
+addEventListener("hashchange", render);
+addEventListener("resize", moveInk);
+$("#burger").addEventListener("click", ()=>navEl.classList.toggle("open"));
+
+/* ───────────── theme ───────────── */
+const SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></svg>`;
+const MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 1 1 9.7 3.5a6.8 6.8 0 0 0 10.8 10.8Z"/></svg>`;
+const tbtn = $("#themeBtn");
+let dark = false;   /* ← true (+ data-theme="dark" on <html>) to open dark */
+function paint(){
+  document.documentElement.setAttribute("data-theme", dark?"dark":"light");
+  tbtn.innerHTML = dark?SUN:MOON;
+  tbtn.setAttribute("aria-label", dark?"Switch to light theme":"Switch to dark theme");
+  readPalette(); SIMS.forEach(s=>s.redraw());
+}
+tbtn.addEventListener("click", ()=>{ dark=!dark; paint(); });
+paint();
+
+const prog = $("#prog");
+addEventListener("scroll", ()=>{
+  const h = document.documentElement.scrollHeight - innerHeight;
+  prog.style.width = (h>0?(scrollY/h)*100:0)+"%";
+},{ passive:true });
+
+render();
+</script>
+</body>
+</html>
