@@ -1179,23 +1179,38 @@ const PROJECTS = [
     tags:["mobile robotics","embedded systems","computer vision"] }
 ];
 
-/* ─── PAPERS ─── status: Published | In press | In preparation | Thesis ─── */
+/* ─── PAPERS ─── status: Published | In press | Under review | In preparation | Thesis ───
+   doi:"10.xxxx/..."  → paste only the DOI itself; the DOI button and BibTeX are built from it.
+   links:{Preprint:"https://..."}  → any link left as "" is simply not shown. ─── */
 const PAPERS = [
+  { title:"Additive Manufacturing of High-Performance Polymers for Extreme Environments",
+    authors:"Md Mesbahul Maruf",                    // ← REPLACE with the full author list
+    venue:"Advanced Science", venueLong:"Advanced Science (Wiley)",
+    type:"journal", year:2026, status:"Published",
+    doi:"",                                         // ← PASTE the DOI here, e.g. "10.1002/advs.2026xxxxx"
+    links:{} },
   { title:"A graph convolutional network approach for hyperspectral image analysis of blueberries physiological traits under drought stress",
     authors:"Md. Hasibur Rahman, Savannah Busby, Sajid Hanif, Md Mesbahul Maruf, Faraz Ahmad, Sushan Ru, Alvaro Sanz-Saez, Jingyi Zheng, Tanzeel U. Rehman",
     venue:"Smart Agricultural Technology", venueLong:"Smart Agricultural Technology 10 (2025), 100743",
     type:"journal", year:2025, status:"Published", links:{} },
-  { title:"Additive Manufacturing of High-Performance Polymers for Extreme Environments",
-    authors:"Md Mesbahul Maruf",                    // ← REPLACE with the full author list
-    venue:"Advanced Science (Wiley)", venueLong:"Advanced Science, Wiley",
-    type:"journal", year:2026, status:"In press",
-    note:"Accepted and in production", links:{} },
-  { title:"Design and Development of an Integrated In-Field Agricultural Robot for Terrain-Adaptive Mobility and Navigation",
+  { title:"Pose-Guided Multi-Camera 3D Gaussian Splatting for Blueberry Height and Canopy Volume Estimation",
     authors:"Md Mesbahul Maruf, Tanzeel U. Rehman",
-    venue:"In preparation", venueLong:"Manuscript in preparation",
-    type:"journal", year:2026, status:"In preparation",
-    links:{} },
-  { title:"Robot-Integrated Pose-Regularized 3D Gaussian Splatting for High-Throughput Blueberry Height and Volume Phenotyping",
+    venue:"Under review", venueLong:"Journal manuscript under review · preprint available",
+    type:"journal", year:2026, status:"Under review",
+    links:{Preprint:""} },                          // ← PASTE the preprint URL between the quotes
+  { title:"Model-Free Inverse Learning of Kalman Filters",
+    authors:"Md Mesbahul Maruf, Bosen Lian",
+    venue:"IEEE Transactions on Automatic Control", venueLong:"Under review, IEEE Transactions on Automatic Control",
+    type:"journal", year:2026, status:"Under review", links:{} },
+  { title:"Integral Inverse Learning of Continuous-time Linear Kalman Filters",
+    authors:"Md Mesbahul Maruf, Bosen Lian",
+    venue:"American Control Conference (ACC 2027)", venueLong:"Under review, 2027 American Control Conference (ACC)",
+    type:"conference", year:2026, status:"Under review", links:{} },
+  { title:"Mechanical Search for Occluded-Object Retrieval: A Scoping Review of Task Formulations, Manipulation Strategies, and Evaluation",
+    authors:"Md Mesbahul Maruf",
+    venue:"Robotics and Autonomous Systems", venueLong:"Under review, Robotics and Autonomous Systems (Elsevier)",
+    type:"review", year:2026, status:"Under review", links:{} },
+  { title:"Design and Development of an Integrated In-Field Agricultural Robot for Terrain-Adaptive Mobility and Navigation",
     authors:"Md Mesbahul Maruf, Tanzeel U. Rehman",
     venue:"In preparation", venueLong:"Manuscript in preparation",
     type:"journal", year:2026, status:"In preparation",
@@ -1252,7 +1267,7 @@ const COPY = {
   homeSim:"An illustrative browser demonstration inspired by my M.S. navigation architecture: Pure Pursuit path tracking with EKF-style fusion of drifting odometry and noisy GPS. It is a concept demo, not a replay of field-test data.",
   about:"",
   projects:"Selected research and engineering projects spanning my M.S. research, current Ph.D. work, and earlier robotics projects. The browser interactions are illustrative demonstrations of the underlying ideas.",
-  papers:"Publications, manuscripts, and theses. Published metadata is linked where a public record is available; work in preparation is labeled separately.",
+  papers:"Publications, manuscripts, and theses. Published metadata is linked where a public record is available; work under review or in preparation is labeled separately.",
   play:"A 2D interactive autonomous-systems explorer for beginners. Choose from 120 robot autonomy modes, run a 40-second live demonstration, and watch how the robot changes its path, speed, sensing, target behavior, and obstacle response.",
   industry:"Production design from two years as a mechanical engineer in industry — CAD, FEA and design for manufacture on parts that shipped."
 };
@@ -2936,6 +2951,7 @@ const PAGES = {
 
   "/papers": () => {
     const out = PAPERS.filter(p=>p.status==="Published"||p.status==="In press").length;
+    const rev = PAPERS.filter(p=>p.status==="Under review").length;
     const prep = PAPERS.filter(p=>p.status==="In preparation").length;
     return `
     <div class="wrap pagehead">
@@ -2944,10 +2960,11 @@ const PAGES = {
     </div>
     <section style="padding-top:44px">
       <div class="wrap">
-        ${dimHead("Publications", `${out} out · ${prep} in preparation`)}
+        ${dimHead("Publications", `${out} out · ${rev} under review · ${prep} in preparation`)}
         ${PAPERS.map((p,i)=>{
           const authors = p.authors.replace(FULLNAME, `<span class="me">${esc(FULLNAME)}</span>`);
-          const links = Object.entries(p.links||{}).map(([k,u])=>`<a href="${esc(u)}">${esc(k)}</a>`).join("");
+          const links = Object.entries({...(p.doi?{DOI:"https://doi.org/"+p.doi}:{}), ...(p.links||{})})
+            .filter(([k,u])=>u).map(([k,u])=>`<a href="${esc(u)}">${esc(k)}</a>`).join("");
           return `<article class="paper reveal" data-p="${i}">
             <div class="stat"><b class="${badgeClass(p.status)}">${esc(p.status)}</b><span class="yr">${p.year}</span></div>
             <div>
